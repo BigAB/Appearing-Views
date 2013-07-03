@@ -22,6 +22,7 @@
 		906C0C65178365090049922D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 906C0C40178365090049922D /* Foundation.framework */; };
 		906C0C7C1783664D0049922D /* ABAppearingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 906C0C7B1783664D0049922D /* ABAppearingView.m */; };
 		9085458817849A3B00A84831 /* ABAppearing View Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9085458717849A3B00A84831 /* ABAppearing View Tests.m */; };
+		9085458B1784C4DB00A84831 /* ABAnimations.m in Sources */ = {isa = PBXBuildFile; fileRef = 9085458A1784C4DB00A84831 /* ABAnimations.m */; };
 		AFBE5612383643DCBB13BAA0 /* libPods-Appearing Views Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 29FE1A641FC24E65AD9E030B /* libPods-Appearing Views Tests.a */; };
 /* End PBXBuildFile section */
 
@@ -60,6 +61,8 @@
 		906C0CAD17837F5B0049922D /* Appearing ViewsTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Appearing ViewsTests-Info.plist"; path = "Appearing Views Tests/Appearing ViewsTests-Info.plist"; sourceTree = SOURCE_ROOT; };
 		906C0CB017837F6F0049922D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "Appearing Views Tests/en.lproj/InfoPlist.strings"; sourceTree = SOURCE_ROOT; };
 		9085458717849A3B00A84831 /* ABAppearing View Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "ABAppearing View Tests.m"; path = "Appearing Views Tests/ABAppearing View Tests.m"; sourceTree = SOURCE_ROOT; };
+		908545891784C4DB00A84831 /* ABAnimations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABAnimations.h; sourceTree = "<group>"; };
+		9085458A1784C4DB00A84831 /* ABAnimations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABAnimations.m; sourceTree = "<group>"; };
 		9FB05FEF6982446B901FB2D7 /* Pods-Appearing Views Tests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Appearing Views Tests.xcconfig"; path = "Pods/Pods-Appearing Views Tests.xcconfig"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -172,6 +175,8 @@
 			children = (
 				906C0C7A1783664D0049922D /* ABAppearingView.h */,
 				906C0C7B1783664D0049922D /* ABAppearingView.m */,
+				908545891784C4DB00A84831 /* ABAnimations.h */,
+				9085458A1784C4DB00A84831 /* ABAnimations.m */,
 			);
 			path = "Appearing Views";
 			sourceTree = "<group>";
@@ -328,6 +333,7 @@
 				906C0C4F178365090049922D /* ABAppDelegate.m in Sources */,
 				906C0C5B178365090049922D /* ABViewController.m in Sources */,
 				906C0C7C1783664D0049922D /* ABAppearingView.m in Sources */,
+				9085458B1784C4DB00A84831 /* ABAnimations.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
