@@ -21,6 +21,8 @@
 		906C0C64178365090049922D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 906C0C3E178365090049922D /* UIKit.framework */; };
 		906C0C65178365090049922D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 906C0C40178365090049922D /* Foundation.framework */; };
 		906C0C7C1783664D0049922D /* ABAppearingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 906C0C7B1783664D0049922D /* ABAppearingView.m */; };
+		9085458817849A3B00A84831 /* ABAppearing View Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9085458717849A3B00A84831 /* ABAppearing View Tests.m */; };
+		AFBE5612383643DCBB13BAA0 /* libPods-Appearing Views Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 29FE1A641FC24E65AD9E030B /* libPods-Appearing Views Tests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		29FE1A641FC24E65AD9E030B /* libPods-Appearing Views Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Appearing Views Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		906C0C3B178365090049922D /* Appearing Views Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Appearing Views Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		906C0C3E178365090049922D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		906C0C40178365090049922D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -56,6 +59,8 @@
 		906C0C7B1783664D0049922D /* ABAppearingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABAppearingView.m; sourceTree = "<group>"; };
 		906C0CAD17837F5B0049922D /* Appearing ViewsTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Appearing ViewsTests-Info.plist"; path = "Appearing Views Tests/Appearing ViewsTests-Info.plist"; sourceTree = SOURCE_ROOT; };
 		906C0CB017837F6F0049922D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "Appearing Views Tests/en.lproj/InfoPlist.strings"; sourceTree = SOURCE_ROOT; };
+		9085458717849A3B00A84831 /* ABAppearing View Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "ABAppearing View Tests.m"; path = "Appearing Views Tests/ABAppearing View Tests.m"; sourceTree = SOURCE_ROOT; };
+		9FB05FEF6982446B901FB2D7 /* Pods-Appearing Views Tests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Appearing Views Tests.xcconfig"; path = "Pods/Pods-Appearing Views Tests.xcconfig"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +81,7 @@
 				906C0C63178365090049922D /* SenTestingKit.framework in Frameworks */,
 				906C0C64178365090049922D /* UIKit.framework in Frameworks */,
 				906C0C65178365090049922D /* Foundation.framework in Frameworks */,
+				AFBE5612383643DCBB13BAA0 /* libPods-Appearing Views Tests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,6 +96,7 @@
 				906C0C68178365090049922D /* Appearing Views Tests */,
 				906C0C3D178365090049922D /* Frameworks */,
 				906C0C3C178365090049922D /* Products */,
+				9FB05FEF6982446B901FB2D7 /* Pods-Appearing Views Tests.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -109,6 +116,7 @@
 				906C0C40178365090049922D /* Foundation.framework */,
 				906C0C42178365090049922D /* CoreGraphics.framework */,
 				906C0C62178365090049922D /* SenTestingKit.framework */,
+				29FE1A641FC24E65AD9E030B /* libPods-Appearing Views Tests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -143,6 +151,7 @@
 		906C0C68178365090049922D /* Appearing Views Tests */ = {
 			isa = PBXGroup;
 			children = (
+				90854582178498E600A84831 /* Specs */,
 				906C0C69178365090049922D /* Supporting Files */,
 			);
 			name = "Appearing Views Tests";
@@ -166,6 +175,15 @@
 			);
 			path = "Appearing Views";
 			sourceTree = "<group>";
+		};
+		90854582178498E600A84831 /* Specs */ = {
+			isa = PBXGroup;
+			children = (
+				9085458717849A3B00A84831 /* ABAppearing View Tests.m */,
+			);
+			name = Specs;
+			path = "Appearing Views Tests/Specs";
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
@@ -191,10 +209,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 906C0C76178365090049922D /* Build configuration list for PBXNativeTarget "Appearing Views Tests" */;
 			buildPhases = (
+				144A4B7AE7044F90881A585D /* Check Pods Manifest.lock */,
 				906C0C5C178365090049922D /* Sources */,
 				906C0C5D178365090049922D /* Frameworks */,
 				906C0C5E178365090049922D /* Resources */,
 				906C0C5F178365090049922D /* ShellScript */,
+				B154E673370F495FA7777F35 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -256,6 +276,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		144A4B7AE7044F90881A585D /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+		};
 		906C0C5F178365090049922D /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -268,6 +302,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+		B154E673370F495FA7777F35 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-Appearing Views Tests-resources.sh\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -287,6 +335,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9085458817849A3B00A84831 /* ABAppearing View Tests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -410,6 +459,7 @@
 		};
 		906C0C77178365090049922D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9FB05FEF6982446B901FB2D7 /* Pods-Appearing Views Tests.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Appearing Views Demo.app/Appearing Views Demo";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -427,6 +477,7 @@
 		};
 		906C0C78178365090049922D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9FB05FEF6982446B901FB2D7 /* Pods-Appearing Views Tests.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Appearing Views Demo.app/Appearing Views Demo";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -461,6 +512,7 @@
 				906C0C75178365090049922D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		906C0C76178365090049922D /* Build configuration list for PBXNativeTarget "Appearing Views Tests" */ = {
 			isa = XCConfigurationList;
@@ -469,6 +521,7 @@
 				906C0C78178365090049922D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
