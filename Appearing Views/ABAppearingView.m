@@ -12,6 +12,11 @@ static id<AnimationMachine> _animations;
 
 @interface ABAppearingView()
 
+@property (nonatomic, assign) CGRect fullFrame;
+@property (nonatomic, readonly) FrameAnimationBlock appearancePrepBlock;
+@property (nonatomic, readonly) FrameAnimationBlock appearanceBlock;
+@property (nonatomic, readonly) FrameAnimationBlock disappearanceBlock;
+
 @end
 
 @implementation ABAppearingView{}
@@ -31,6 +36,7 @@ static id<AnimationMachine> _animations;
 - (void)_initialization
 {
     self.hidden = YES;
+    self.animationDuration = 1.0f;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -51,6 +57,27 @@ static id<AnimationMachine> _animations;
     return self;
 }
 
+#pragma mark - Property Accessors
+- (FrameAnimationBlock)appearancePrepBlock
+{
+    return [_animations animationBlockWithType:AnimationTypeSlideTop phase:AnimationPhaseIn];
+}
+
+-(FrameAnimationBlock)appearanceBlock
+{
+    return [_animations animationBlockWithType:AnimationTypeSlideTop phase:AnimationPhaseIn];
+}
+
+- (FrameAnimationBlock)disappearancePrepBlock
+{
+    return [_animations animationBlockWithType:AnimationTypeSlideTop phase:AnimationPhaseOut];
+}
+
+-(FrameAnimationBlock)disappearanceBlock
+{
+    return [_animations animationBlockWithType:AnimationTypeSlideTop phase:AnimationPhaseOut];
+}
+
 #pragma mark - Appearing and Disappearing
 - (void)appear
 {
@@ -63,17 +90,42 @@ static id<AnimationMachine> _animations;
 
 - (void)disappear
 {
-    //
+    if (self.hidden) return;
+    self.fullFrame = self.frame;
+    [self disappearWithAnimation];
 }
 
 - (void)prepareForAnimatedAppearance
 {
-    
+    self.fullFrame = self.frame;
+    self.appearancePrepBlock(self.fullFrame);
 }
 
 - (void)appearWithAnimation
 {
-    
+    __block ABAppearingView *_self = self;
+    [UIView animateWithDuration:self.animationDuration animations:^{
+        _self.appearanceBlock(self.fullFrame);
+    } completion:^(BOOL finished){
+        // notify done
+    }];
+}
+
+- (void)disappearWithAnimation
+{
+    __block ABAppearingView *_self = self;
+    [UIView animateWithDuration:self.animationDuration animations:^{
+        _self.disappearanceBlock(self.frame);
+    } completion:^(BOOL finished){
+        _self.hidden = YES;
+        [_self resetFrame];
+        // notify done
+    }];
+}
+
+- (void)resetFrame
+{
+    self.frame = self.fullFrame;
 }
 
 #pragma mark - ABAppearingViewDelagate

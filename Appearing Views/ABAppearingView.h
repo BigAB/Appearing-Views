@@ -15,6 +15,8 @@
 
 @property (nonatomic, weak) id <ABAppearingViewDelagate>delegate;
 
+@property (nonatomic, assign) NSTimeInterval animationDuration;
+
 + (void)setAnimationsObject:(id<AnimationMachine>)animationsObject;
 
 - (void)appear;

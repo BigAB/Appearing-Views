@@ -23,6 +23,8 @@
 		906C0C7C1783664D0049922D /* ABAppearingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 906C0C7B1783664D0049922D /* ABAppearingView.m */; };
 		9085458817849A3B00A84831 /* ABAppearing View Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9085458717849A3B00A84831 /* ABAppearing View Tests.m */; };
 		9085458B1784C4DB00A84831 /* ABAnimations.m in Sources */ = {isa = PBXBuildFile; fileRef = 9085458A1784C4DB00A84831 /* ABAnimations.m */; };
+		9085458D1784D94000A84831 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9085458C1784D94000A84831 /* QuartzCore.framework */; };
+		9085458E1784DA3F00A84831 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 906C0C42178365090049922D /* CoreGraphics.framework */; };
 		AFBE5612383643DCBB13BAA0 /* libPods-Appearing Views Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 29FE1A641FC24E65AD9E030B /* libPods-Appearing Views Tests.a */; };
 /* End PBXBuildFile section */
 
@@ -63,6 +65,7 @@
 		9085458717849A3B00A84831 /* ABAppearing View Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "ABAppearing View Tests.m"; path = "Appearing Views Tests/ABAppearing View Tests.m"; sourceTree = SOURCE_ROOT; };
 		908545891784C4DB00A84831 /* ABAnimations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABAnimations.h; sourceTree = "<group>"; };
 		9085458A1784C4DB00A84831 /* ABAnimations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABAnimations.m; sourceTree = "<group>"; };
+		9085458C1784D94000A84831 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		9FB05FEF6982446B901FB2D7 /* Pods-Appearing Views Tests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Appearing Views Tests.xcconfig"; path = "Pods/Pods-Appearing Views Tests.xcconfig"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -71,6 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9085458D1784D94000A84831 /* QuartzCore.framework in Frameworks */,
 				906C0C3F178365090049922D /* UIKit.framework in Frameworks */,
 				906C0C41178365090049922D /* Foundation.framework in Frameworks */,
 				906C0C43178365090049922D /* CoreGraphics.framework in Frameworks */,
@@ -81,6 +85,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9085458E1784DA3F00A84831 /* CoreGraphics.framework in Frameworks */,
 				906C0C63178365090049922D /* SenTestingKit.framework in Frameworks */,
 				906C0C64178365090049922D /* UIKit.framework in Frameworks */,
 				906C0C65178365090049922D /* Foundation.framework in Frameworks */,
@@ -115,6 +120,7 @@
 		906C0C3D178365090049922D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9085458C1784D94000A84831 /* QuartzCore.framework */,
 				906C0C3E178365090049922D /* UIKit.framework */,
 				906C0C40178365090049922D /* Foundation.framework */,
 				906C0C42178365090049922D /* CoreGraphics.framework */,
