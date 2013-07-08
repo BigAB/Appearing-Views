@@ -39,10 +39,10 @@
                                        view.alpha = 0;
                                    },
                                    @(AnimationPhaseIn) : ^(UIView *view, CGRect frame){
-                                       view.alpha = 0;
+                                       view.alpha = 1;
                                    },
                                    @(AnimationPhaseOut) : ^(UIView *view, CGRect frame){
-                                       view.alpha = 1;
+                                       view.alpha = 0;
                                    },
                                    },
                            };

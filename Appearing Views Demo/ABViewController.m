@@ -10,6 +10,9 @@
 
 @interface ABViewController ()
 
+@property (weak, nonatomic) IBOutlet ABAppearingView *mainTitle;
+@property (weak, nonatomic) IBOutlet ABAppearingView *topBanner;
+
 @end
 
 @implementation ABViewController
@@ -17,13 +20,69 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+    self.mainTitle.animationDuration = 3;
+    self.mainTitle.animationType = AnimationTypeFade;
+    self.mainTitle.delegate = self;
+    
+    
+    self.topBanner.animationDuration = 0.5;
+    self.topBanner.animationType = AnimationTypeFade;// AnimationTypeSlideTop;
+    self.topBanner.delegate = self;
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [self.mainTitle appear];
+}
+
+#pragma mark - ABAppearingViewDelegate
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
+- (void)viewDidUnload {
+    [self setMainTitle:nil];
+    [self setTopBanner:nil];
+    [super viewDidUnload];
+}
+
+- (BOOL)appearingView:(ABAppearingView *)view
+    willAppearToFrame:(CGRect)frame
+        animationType:(AnimationType)type
+             duration:(NSTimeInterval)duration
+              options:(UIViewAnimationOptions)options
+{
+    NSLog(@"View will appear");
+    return YES;
+}
+
+- (void)appearingViewDidAppear:(ABAppearingView *)view
+{
+    NSLog(@"%@ did appear", view);
+    if (view == self.mainTitle) {
+        [self.topBanner appear];
+        [self.mainTitle performSelector:@selector(disappear) withObject:nil afterDelay:1];
+    }
+    
+    if (view == self.topBanner) {
+        NSLog(@"NOW WHAT?");
+    }
+}
+
+- (BOOL)appearingView:(ABAppearingView *)view
+willDisappearFromFrame:(CGRect)frame
+        animationType:(AnimationType)type
+             duration:(NSTimeInterval)duration
+              options:(UIViewAnimationOptions)options
+{
+    NSLog(@"View will disappear");
+    return YES;
+}
+
+- (void)appearingViewDidDisappear:(ABAppearingView *)view
+{
+    NSLog(@"View did disappear");
+}
 @end

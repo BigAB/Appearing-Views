@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ABAppearingView.h"
 
-@interface ABViewController : UIViewController
+@interface ABViewController: UIViewController <ABAppearingViewDelagate>
 
 @end
