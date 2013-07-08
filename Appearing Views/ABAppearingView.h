@@ -5,6 +5,16 @@
 //  Created by Adam Barrett on 2013-07-02.
 //  Copyright (c) 2013 Adam Barrett. All rights reserved.
 //
+#define AppearingViewWillAppear @"ABAppearingViewWillAppear"
+#define AppearingViewDidAppear @"ABAppearingDidWillAppear"
+#define AppearingViewWillDisappear @"ABAppearingViewWillDisappear"
+#define AppearingViewDidDisappear @"ABAppearingViewDidDisappear"
+
+#define AppearingViewViewKey      @"view"
+#define AppearingViewFrameKey     @"frame"
+#define AppearingViewTypeKey      @"type"
+#define AppearingViewDurationKey  @"duration"
+#define AppearingViewOptionsKey   @"options"
 
 #import <UIKit/UIKit.h>
 #import "ABAnimations.h"
@@ -14,8 +24,11 @@
 @interface ABAppearingView : UIView
 
 @property (nonatomic, weak) id <ABAppearingViewDelagate>delegate;
+@property (nonatomic, strong) NSNotificationCenter *notificationCenter;
 
+@property (nonatomic, assign) AnimationType animationType;
 @property (nonatomic, assign) NSTimeInterval animationDuration;
+@property (nonatomic, assign) UIViewAnimationOptions animationOptions;
 
 + (void)setAnimationsObject:(id<AnimationMachine>)animationsObject;
 
@@ -26,17 +39,20 @@
 
 @protocol ABAppearingViewDelagate <NSObject>
 @optional
-- (BOOL)appearingViewWillAnimateToFrame:(CGRect)frame;
-- (void)appearingViewDidAnimateToFrame:(CGRect)frame;
 
-- (BOOL)appearingViewWillAppearAnimated:(BOOL)animated
-                               duration:(NSTimeInterval)duration
-                                options:(UIViewAnimationOptions)options;
-- (void)appearingViewDidAppearAnimated:(BOOL)animated;
+- (BOOL)appearingView:(ABAppearingView *)view
+    willAppearToFrame:(CGRect)frame
+        animationType:(AnimationType)type
+             duration:(NSTimeInterval)duration
+              options:(UIViewAnimationOptions)options;
 
+- (void)appearingViewDidAppear:(ABAppearingView *)view;
 
-- (BOOL)appearingViewWillDisappearAnimated:(BOOL)animated
-                               duration:(NSTimeInterval)duration
-                                options:(UIViewAnimationOptions)options;
-- (void)appearingViewDidDisappearAnimated:(BOOL)animated;
+- (BOOL)appearingView:(ABAppearingView *)view
+willDisappearFromFrame:(CGRect)frame
+        animationType:(AnimationType)type
+             duration:(NSTimeInterval)duration
+              options:(UIViewAnimationOptions)options;
+
+- (void)appearingViewDidDisappear:(ABAppearingView *)view;
 @end

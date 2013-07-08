@@ -8,6 +8,8 @@
 #import "Kiwi.h"
 #import "ABAppearingView.h"
 
+#pragma mark - All these are here so as to test "private" methods/properties
+#pragma mark -
 @interface ABAppearingView()
 
 @property (nonatomic, assign) CGRect fullFrame;
@@ -16,7 +18,11 @@
 
 - (void)prepareForAnimatedAppearance;
 - (void)appearWithAnimation;
+- (void)disappearWithAnimation;
+- (void)resetFrame;
 @end
+#pragma mark -
+#pragma mark -
 
 SPEC_BEGIN(ABAppearingViewSpec)
 
@@ -68,6 +74,34 @@ describe(@"Appearing", ^{
             [appearingView appear];
         });
         
+        it(@"should notify the delegate and the notification center that it is about to animate in", ^{
+            //setup
+            [appearingView stub:@selector(prepareForAnimatedAppearance)];
+            [appearingView stub:@selector(setHidden:)];
+            [appearingView stub:@selector(appearWithAnimation)];
+            
+            // expected
+            [[appearingView should] receive:@selector(notifyListenersWill:) withArguments:theValue(AnimationPhaseIn)];
+            
+            //actual
+            [appearingView appear];
+        });
+        
+        it(@"should do nothing if the delegate responds NO to willappearWithAnimation", ^{
+            //setup
+            id delegateMock = [KWMock mockForProtocol:@protocol(ABAppearingViewDelagate)];
+            [delegateMock stub:@selector(appearingView:willAppearToFrame:animationType:duration:options:) andReturn:theValue(NO)];
+            appearingView.delegate = delegateMock;
+            
+            //expected
+            [[appearingView shouldNot] receive:@selector(prepareForAnimatedAppearance)];
+            [[appearingView shouldNot] receive:@selector(setHidden:)];
+            [[appearingView shouldNot] receive:@selector(appearWithAnimation)];
+            
+            //actual
+            [appearingView appear];
+        });
+        
     });
     
     describe(@"-prepareForAnimatedAppearance", ^{
@@ -76,7 +110,7 @@ describe(@"Appearing", ^{
             //setup
             [[theValue(appearingView.fullFrame) should] equal:theValue(CGRectZero)];
             __block BOOL iWasCalled = NO;
-            FrameAnimationBlock mockAppearancePrepBlock = ^(CGRect frame) {
+            FrameAnimationBlock mockAppearancePrepBlock = ^(UIView *view, CGRect frame) {
                 iWasCalled = YES;
             };
             
@@ -111,7 +145,7 @@ describe(@"Appearing", ^{
             CGRect expectedFrame = CGRectMake(1, 2, 3, 4);
             [[theValue(appearingView.fullFrame) should] equal:theValue(CGRectZero)];
             __block CGRect theFrame;
-            FrameAnimationBlock mockAppearanceBlock = ^(CGRect frame) {
+            FrameAnimationBlock mockAppearanceBlock = ^(UIView *view, CGRect frame) {
                 theFrame = frame;
             };
             
@@ -124,6 +158,20 @@ describe(@"Appearing", ^{
             
             //assert
             [[theValue(theFrame) should] equal:theValue(expectedFrame)];
+        });
+        
+        it(@"should notify the delegate and the notification center that it DID animate in, after it appearsWithAnimation", ^{
+            //setup
+            KWCaptureSpy *completionSpy = [UIView captureArgument:@selector(animateWithDuration:animations:completion:) atIndex:2];
+            
+            //expected
+            [appearingView appearWithAnimation];
+            void (^completionBlock)(BOOL finished) = completionSpy.argument;
+            
+            [[appearingView should] receive:@selector(notifyListenersDid:) withArguments:theValue(AnimationPhaseIn)];
+            
+            // actual
+            completionBlock(YES);
         });
         
     });
@@ -164,15 +212,77 @@ describe(@"Disappearing", ^{
             [appearingView disappear];
         });
         
+        it(@"should notify the delegate and the notification center that it is about to animate out", ^{
+            // expected
+            [[appearingView should] receive:@selector(notifyListenersWill:) withArguments:theValue(AnimationPhaseOut)];
+            
+            //actual
+            [appearingView disappear];
+        });
+        
+        it(@"should do nothing if the delegate responds NO to willDisappearWithAnimation", ^{
+            //setup
+            id delegateMock = [KWMock mockForProtocol:@protocol(ABAppearingViewDelagate)];
+            [delegateMock stub:@selector(appearingView:willDisappearFromFrame:animationType:duration:options:) andReturn:theValue(NO)];
+            appearingView.delegate = delegateMock;
+            
+            //expected
+            [[appearingView shouldNot] receive:@selector(disappearWithAnimation)];
+            [[appearingView shouldNot] receive:@selector(setHidden:)];
+            [[appearingView shouldNot] receive:@selector(resetFrame)];
+            
+            //actual
+            [appearingView disappear];
+        });
+        
     });
     
     describe(@"-disappearWithAnimation", ^{
         
         it(@"should animate out, THEN become invisible, then return to its full frame", ^{
             //setup
+            FrameAnimationBlock mockDisappearanceBlock = ^(UIView *view, CGRect frame) {};
+            KWCaptureSpy *completionSpy = [UIView captureArgument:@selector(animateWithDuration:animations:completion:) atIndex:2];
             
-            //[[appearingView should] receive:@selector(setHidden:) withArguments:theValue(YES)];
-            //[[appearingView shouldEventually] receive:@selector(resetFrame)];
+            //expected
+            [[appearingView should] receive:@selector(disappearanceBlock) andReturn:theValue(mockDisappearanceBlock)];
+            [[appearingView should] receive:@selector(setHidden:) withArguments:theValue(YES)];
+            [[appearingView should] receive:@selector(resetFrame)];
+            
+            // actual
+            [appearingView disappearWithAnimation];
+            void (^completionBlock)(BOOL finished) = completionSpy.argument;
+            completionBlock(YES);
+            
+        });
+        
+        
+        it(@"should notify the delegate and the notification center that it DID animate out, after it disappearsWithAnimation", ^{
+            //setup
+            KWCaptureSpy *completionSpy = [UIView captureArgument:@selector(animateWithDuration:animations:completion:) atIndex:2];
+            
+            //expected
+            [appearingView disappearWithAnimation];
+            void (^completionBlock)(BOOL finished) = completionSpy.argument;
+            
+            [[appearingView should] receive:@selector(notifyListenersDid:) withArguments:theValue(AnimationPhaseOut)];
+            
+            // actual
+            completionBlock(YES);
+        });
+    });
+    
+    describe(@"-resetFrame", ^{
+        
+        it(@"should set teh appearingViews frame to @fullFrame", ^{
+            //setup
+            CGRect expecetedFrame = CGRectMake(1, 2, 10, 20);
+            appearingView.fullFrame = expecetedFrame;
+            appearingView.frame = CGRectZero;
+            
+            // actual
+            [appearingView resetFrame];
+            [[theValue(appearingView.frame) should] equal:theValue(expecetedFrame)];
         });
     });
     

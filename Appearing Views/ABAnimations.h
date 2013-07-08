@@ -9,12 +9,13 @@
 #import <Foundation/Foundation.h>
 
 typedef enum {
-    AnimationPhaseIndeterminate,
+    AnimationPhasePrep,
     AnimationPhaseIn,
     AnimationPhaseOut,
 } AnimationPhase;
 
 typedef enum {
+    AnimationTypeNone,
     AnimationTypeFade,
     AnimationTypeSlideTop,
     AnimationTypeSlideBottom,
@@ -22,7 +23,7 @@ typedef enum {
     AnimationTypeSlideRight,
 } AnimationType;
 
-typedef void (^FrameAnimationBlock)(CGRect viewFrame);
+typedef void (^FrameAnimationBlock)(UIView *view, CGRect frame);
 
 @protocol AnimationMachine <NSObject>
 
