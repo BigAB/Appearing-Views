@@ -13,26 +13,45 @@
 @property (weak, nonatomic) IBOutlet ABAppearingView *mainTitle;
 @property (weak, nonatomic) IBOutlet ABAppearingView *topBanner;
 
-@property (nonatomic, strong) ABAppearingView *happyView;
+@property (weak, nonatomic) IBOutlet UIButton *pressMe;
+@property (nonatomic, assign) CGFloat pressMeX;
+
+@property (nonatomic, strong) ABAppearingView *happySun;
+@property (nonatomic, strong) ABAppearingView *grass;
 
 @end
 
 @implementation ABViewController
 
 #pragma mark - Property Accessors
-- (ABAppearingView *)happyView
+- (ABAppearingView *)happySun
 {
-    if (!_happyView) {
+    if (!_happySun) {
         UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
         UIViewController *vc = [storyBoard instantiateViewControllerWithIdentifier:@"Happy"];
-        _happyView = vc.view.subviews[0];
-        _happyView.animationDuration = 0.5;
-        _happyView.animationType = AnimationTypeSlideRight;
-        _happyView.animationOptions = UIViewAnimationOptionBeginFromCurrentState;
-        _happyView.delegate = self;
-        [self.view addSubview:_happyView];
+        _happySun = vc.view.subviews[0];
+        _happySun.animationDuration = 0.5;
+        _happySun.animationType = AnimationTypeSlideRight;
+        _happySun.animationOptions = UIViewAnimationOptionBeginFromCurrentState;
+        _happySun.delegate = self;
+        [self.view addSubview:_happySun];
     }
-    return _happyView;
+    return _happySun;
+}
+
+- (ABAppearingView *)grass
+{
+    if (!_grass) {
+        UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+        UIViewController *vc = [storyBoard instantiateViewControllerWithIdentifier:@"Happy"];
+        _grass = vc.view.subviews[1];
+        _grass.animationDuration = 2.5;
+        _grass.animationType = AnimationTypeSlideBottom;
+        _grass.animationOptions = UIViewAnimationOptionAllowUserInteraction;
+        _grass.delegate = self;
+        [self.view addSubview:_grass];
+    }
+    return _grass;
 }
 
 #pragma mark - LifeCycle
@@ -55,14 +74,14 @@
 
 - (void)getHappySquare
 {
-    [self.happyView appear];
-    NSLog(@"HappyView COME!");
+    [self.happySun appear];
+    NSLog(@"happySun COME!");
 }
 
 - (void)dismissHappySquare
 {
-    [self.happyView disappear];
-    NSLog(@"HappyView GO AWAY!");
+    [self.happySun disappear];
+    NSLog(@"happySun GO AWAY!");
 }
 
 #pragma mark - ABAppearingViewDelegate
@@ -75,6 +94,7 @@
 - (void)viewDidUnload {
     [self setMainTitle:nil];
     [self setTopBanner:nil];
+    [self setPressMe:nil];
     [super viewDidUnload];
 }
 
@@ -84,12 +104,13 @@
              duration:(NSTimeInterval)duration
               options:(UIViewAnimationOptions)options
 {
-    if (view == self.happyView) {
+    if (view == self.happySun) {
         __block ABViewController *_self = self;
-        [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
-            CGRect f = _self.topBanner.frame;
-            CGFloat squishedWidth = f.size.width - _self.happyView.frame.size.width;
-            _self.topBanner.frame = CGRectMake(f.origin.x-10, f.origin.y, squishedWidth, f.size.height);
+        UIViewAnimationOptions options = UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState;
+        [UIView animateWithDuration:duration delay:0 options:options animations:^{
+            CGRect f = _self.pressMe.frame;
+            self.pressMeX = f.origin.x;
+            _self.pressMe.frame = CGRectMake(30, f.origin.y, f.size.width, f.size.height);
         } completion:nil];
     }
     
@@ -98,14 +119,19 @@
 
 - (void)appearingViewDidAppear:(ABAppearingView *)view
 {
-    //NSLog(@"%@ did appear", view);
     if (view == self.mainTitle) {
         [self.topBanner appear];
         [self.mainTitle performSelector:@selector(disappear) withObject:nil afterDelay:1];
     }
     
-    if (view == self.topBanner) {
-        //NSLog(@"NOW WHAT?");
+    if (view == self.happySun) {
+        __block ABViewController *_self = self;
+        UIViewAnimationOptions options = UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState;
+        [UIView animateWithDuration:3 delay:0 options:options animations:^{
+            _self.view.backgroundColor = [UIColor colorWithHue:134.0/360.0 saturation:0.16 brightness:0.98 alpha:1];
+        } completion:nil];
+        
+        [self.grass performSelector:@selector(appear) withObject:nil afterDelay:1];
     }
     
 }
@@ -116,11 +142,12 @@ willDisappearFromFrame:(CGRect)frame
              duration:(NSTimeInterval)duration
               options:(UIViewAnimationOptions)options
 {
-    if (view == self.happyView) {
+    if (view == self.happySun) {
         __block ABViewController *_self = self;
-        [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
-            CGRect f = _self.topBanner.frame;
-            _self.topBanner.frame = CGRectMake(0, f.origin.y, self.view.bounds.size.width, f.size.height);
+        UIViewAnimationOptions options = UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState;
+        [UIView animateWithDuration:duration delay:0 options:options animations:^{
+            CGRect f = _self.pressMe.frame;
+            _self.pressMe.frame = CGRectMake(self.pressMeX, f.origin.y, f.size.width, f.size.height);
         } completion:nil];
     }
     
@@ -129,12 +156,18 @@ willDisappearFromFrame:(CGRect)frame
 
 - (void)appearingViewDidDisappear:(ABAppearingView *)view
 {
-    //NSLog(@"View did disappear");
+    if (view == self.happySun) {
+        __block ABViewController *_self = self;
+        UIViewAnimationOptions options = UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState;
+        [UIView animateWithDuration:3 delay:0 options:options animations:^{
+            _self.view.backgroundColor = [UIColor colorWithHue:242.0/360.0 saturation:0.07 brightness:0.88 alpha:1];
+        } completion:nil];
+    }
 }
 
 #pragma mark - Actions
 - (IBAction)dismissTopBanner:(id)sender {
-    if (self.happyView.hidden) {
+    if (self.happySun.hidden) {
         [self getHappySquare];
     } else {
         [self dismissHappySquare];
