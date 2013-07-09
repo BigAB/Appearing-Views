@@ -118,10 +118,10 @@ willDisappearFromFrame:(CGRect)frame
 {
     if (view == self.happyView) {
         __block ABViewController *_self = self;
-        [UIView animateWithDuration:duration animations:^{
+        [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionAllowUserInteraction animations:^{
             CGRect f = _self.topBanner.frame;
             _self.topBanner.frame = CGRectMake(0, f.origin.y, self.view.bounds.size.width, f.size.height);
-        }];
+        } completion:nil];
     }
     
     return YES;
