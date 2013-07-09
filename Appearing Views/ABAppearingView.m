@@ -184,7 +184,7 @@ static id<AnimationMachine> _animations;
                 itWill = [self.delegate appearingView:self
                                     willAppearToFrame:[animationInfo[AppearingViewFrameKey] CGRectValue]
                                         animationType:[animationInfo[AppearingViewTypeKey] intValue]
-                                             duration:[animationInfo[AppearingViewDurationKey] intValue]
+                                             duration:[animationInfo[AppearingViewDurationKey] floatValue]
                                               options:[animationInfo[AppearingViewOptionsKey] intValue]
                           ];
             }
@@ -196,7 +196,7 @@ static id<AnimationMachine> _animations;
                 itWill = [self.delegate appearingView:self
                                willDisappearFromFrame:[animationInfo[AppearingViewFrameKey] CGRectValue]
                                         animationType:[animationInfo[AppearingViewTypeKey] intValue]
-                                             duration:[animationInfo[AppearingViewDurationKey] intValue]
+                                             duration:[animationInfo[AppearingViewDurationKey] floatValue]
                                               options:[animationInfo[AppearingViewOptionsKey] intValue]
                           ];
             }
