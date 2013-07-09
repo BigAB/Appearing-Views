@@ -53,6 +53,10 @@ typedef enum {
                            @(AnimationTypeSlideBottom) : [self slideBottom],
                            @(AnimationTypeSlideLeft) : [self slideLeft],
                            @(AnimationTypeSlideRight) : [self slideRight],
+                           @(AnimationTypeRevealTop) : [self revealTop],
+                           @(AnimationTypeRevealBottom) : [self revealBottom],
+                           @(AnimationTypeRevealLeft) : [self revealLeft],
+                           @(AnimationTypeRevealRight) : [self revealRight],
                            };
     }
     return _animationsMap;
@@ -143,6 +147,7 @@ typedef enum {
                  [_self storeSubviewFramesForView:view];
                  [_self setSubviewsofView:view forFrame:frame axis:y magnitude:-1];
                  view.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 0);
+                 
              },
              @(AnimationPhaseReset) : ^(UIView *view, CGRect frame){
                  [_self restoreSubviewFramesForView:view];
@@ -164,8 +169,7 @@ typedef enum {
                   CGFloat newY = frame.origin.y + frame.size.height;
                   view.frame = CGRectMake(frame.origin.x, newY, frame.size.width, 0);
               },
-              @(AnimationPhaseReset) : ^(UIView *view, CGRect frame){
-              },
+              @(AnimationPhaseReset) : ^(UIView *view, CGRect frame){},
               };
 }
 
@@ -182,8 +186,10 @@ typedef enum {
                   
               },
               @(AnimationPhaseIn) : ^(UIView *view, CGRect frame){
+                  
                   view.frame = frame;
                   [_self restoreSubviewFramesForView:view];
+                  
               },
               @(AnimationPhaseOut) : ^(UIView *view, CGRect frame){
                   
@@ -203,19 +209,101 @@ typedef enum {
 {
     return  @{
               @(AnimationPhasePrep) : ^(UIView *view, CGRect frame){
+                  
                   CGFloat newX = frame.origin.x + frame.size.width;
                   view.frame = CGRectMake(newX, frame.origin.y, 0, frame.size.height);
+                  
               },
               @(AnimationPhaseIn) : ^(UIView *view, CGRect frame){
                   view.frame = frame;
               },
               @(AnimationPhaseOut) : ^(UIView *view, CGRect frame){
+                  
                   CGFloat newX = frame.origin.x + frame.size.width;
                   view.frame = CGRectMake(newX, frame.origin.y, 0, frame.size.height);
+                  
               },
               @(AnimationPhaseReset) : ^(UIView *view, CGRect frame){},
               };
 }
 
+- (NSDictionary *)revealTop
+{
+    return  @{
+              @(AnimationPhasePrep) : ^(UIView *view, CGRect frame){
+                  view.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 0);
+              },
+              @(AnimationPhaseIn) : ^(UIView *view, CGRect frame){
+                  view.frame = frame;
+              },
+              @(AnimationPhaseOut) : ^(UIView *view, CGRect frame){
+                  view.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 0);
+              },
+              @(AnimationPhaseReset) : ^(UIView *view, CGRect frame){},
+              };
+}
 
+- (NSDictionary *)revealBottom
+{
+    __block ABAnimations *_self = self;
+    return  @{
+              @(AnimationPhasePrep) : ^(UIView *view, CGRect frame){
+                  [_self storeSubviewFramesForView:view];
+                  [_self setSubviewsofView:view forFrame:frame axis:y magnitude:-1];
+                  view.frame = CGRectMake(frame.origin.x, frame.origin.y + frame.size.height, frame.size.width, 0);
+              },
+              @(AnimationPhaseIn) : ^(UIView *view, CGRect frame){
+                  [_self restoreSubviewFramesForView:view];
+                  view.frame = frame;
+              },
+              @(AnimationPhaseOut) : ^(UIView *view, CGRect frame){
+                  [_self storeSubviewFramesForView:view];
+                  [_self setSubviewsofView:view forFrame:frame axis:y magnitude:-1];
+                  view.frame = CGRectMake(frame.origin.x, frame.origin.y + frame.size.height, frame.size.width, 0);
+              },
+              @(AnimationPhaseReset) : ^(UIView *view, CGRect frame){
+                [_self restoreSubviewFramesForView:view];
+              },
+              };
+}
+
+- (NSDictionary *)revealLeft
+{
+    return  @{
+              @(AnimationPhasePrep) : ^(UIView *view, CGRect frame){
+                  view.frame = CGRectMake(frame.origin.x, frame.origin.y, 0, frame.size.height);
+              },
+              @(AnimationPhaseIn) : ^(UIView *view, CGRect frame){
+                  view.frame = frame;
+              },
+              @(AnimationPhaseOut) : ^(UIView *view, CGRect frame){
+                  view.frame = CGRectMake(frame.origin.x, frame.origin.y, 0, frame.size.height);
+              },
+              @(AnimationPhaseReset) : ^(UIView *view, CGRect frame){},
+              };
+}
+
+- (NSDictionary *)revealRight
+{
+    __block ABAnimations *_self = self;
+    return  @{
+              @(AnimationPhasePrep) : ^(UIView *view, CGRect frame){
+                  [_self storeSubviewFramesForView:view];
+                  [_self setSubviewsofView:view forFrame:frame axis:x magnitude:-1];
+                  view.frame = CGRectMake(frame.origin.x + frame.size.width, frame.origin.y, 0, frame.size.height);
+              },
+              @(AnimationPhaseIn) : ^(UIView *view, CGRect frame){
+                  [_self restoreSubviewFramesForView:view];
+                  view.frame = frame;
+              },
+              @(AnimationPhaseOut) : ^(UIView *view, CGRect frame){
+                  [_self storeSubviewFramesForView:view];
+                  [_self setSubviewsofView:view forFrame:frame axis:x magnitude:-1];
+                  view.frame = CGRectMake(frame.origin.x + frame.size.width, frame.origin.y, 0, frame.size.height);
+              },
+              @(AnimationPhaseReset) : ^(UIView *view, CGRect frame){
+                  [_self restoreSubviewFramesForView:view];
+              },
+              };
+}
 @end

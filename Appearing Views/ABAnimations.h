@@ -22,6 +22,10 @@ typedef enum {
     AnimationTypeSlideBottom,
     AnimationTypeSlideLeft,
     AnimationTypeSlideRight,
+    AnimationTypeRevealTop,
+    AnimationTypeRevealBottom,
+    AnimationTypeRevealLeft,
+    AnimationTypeRevealRight,
 } AnimationType;
 
 typedef void (^FrameAnimationBlock)(UIView *view, CGRect frame);
