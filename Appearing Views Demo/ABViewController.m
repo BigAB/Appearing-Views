@@ -24,7 +24,7 @@
     self.mainTitle.animationType = AnimationTypeFade;
     self.mainTitle.delegate = self;
     
-    self.topBanner.animationDuration = 3.5;
+    self.topBanner.animationDuration = 0.5;
     self.topBanner.animationType = AnimationTypeSlideTop;
     self.topBanner.delegate = self;
 }
