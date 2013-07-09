@@ -9,7 +9,9 @@
 #import "ABAnimations.h"
 
 @interface ABAnimations()
-
+{
+    NSArray *_subviewPostAnimationFrames;
+}
 @property (nonatomic, strong) NSDictionary *animationsMap;
 
 @end
@@ -21,6 +23,9 @@
     FrameAnimationBlock animationBlock;
     
     animationBlock = self.animationsMap[@(type)][@(phase)];
+    if (!animationBlock) {
+        animationBlock = ^(UIView *view, CGRect frame){};
+    }
     
     return [animationBlock copy];
 }
@@ -42,6 +47,30 @@
                                        view.alpha = 1;
                                    },
                                    @(AnimationPhaseOut) : ^(UIView *view, CGRect frame){
+                                       view.alpha = 0;
+                                   },
+                                   },
+                           @(AnimationTypeSlideTop) : @{
+                                   @(AnimationPhasePrep) : ^(UIView *view, CGRect frame){
+                                       view.clipsToBounds = YES;
+                                       view.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 0);
+                                       _subviewPostAnimationFrames = [view.subviews valueForKey:@"frame"];
+                                       [view.subviews enumerateObjectsUsingBlock:^(UIView *subview, NSUInteger idx, BOOL *stop) {
+                                           CGRect f = subview.frame;
+                                           CGFloat offsetY = (f.origin.y - frame.size.height);
+                                           subview.frame = CGRectMake(f.origin.x, offsetY, f.size.width, f.size.height);
+                                       }];
+                                   },
+                                   @(AnimationPhaseIn) : ^(UIView *view, CGRect frame){
+                                       view.frame = frame;
+                                       [view.subviews enumerateObjectsUsingBlock:^(UIView *subview, NSUInteger idx, BOOL *stop) {
+                                           subview.frame = [_subviewPostAnimationFrames[idx] CGRectValue];
+                                       }];
+                                   },
+                                   @(AnimationPhaseOut) : ^(UIView *view, CGRect frame){
+                                       view.alpha = 0;
+                                   },
+                                   @(AnimationPhaseReset) : ^(UIView *view, CGRect frame){
                                        view.alpha = 0;
                                    },
                                    },

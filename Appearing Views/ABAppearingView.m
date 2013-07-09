@@ -16,6 +16,9 @@ static id<AnimationMachine> _animations;
 @property (nonatomic, readonly) FrameAnimationBlock appearancePrepBlock;
 @property (nonatomic, readonly) FrameAnimationBlock appearanceBlock;
 @property (nonatomic, readonly) FrameAnimationBlock disappearanceBlock;
+@property (nonatomic, readonly) FrameAnimationBlock resetBlock;
+
+@property (nonatomic, assign) BOOL originalClipsToBounds;
 
 @end
 
@@ -73,6 +76,11 @@ static id<AnimationMachine> _animations;
     return [_animations animationBlockWithType:self.animationType phase:AnimationPhaseOut];
 }
 
+-(FrameAnimationBlock)resetBlock
+{
+    return [_animations animationBlockWithType:self.animationType phase:AnimationPhaseReset];
+}
+
 
 - (NSNotificationCenter *)notificationCenter
 {
@@ -104,6 +112,8 @@ static id<AnimationMachine> _animations;
 - (void)prepareForAnimatedAppearance
 {
     self.fullFrame = self.frame;
+    self.originalClipsToBounds = self.clipsToBounds;
+    self.clipsToBounds = YES;
     self.appearancePrepBlock(self, self.fullFrame);
 }
 
@@ -113,7 +123,7 @@ static id<AnimationMachine> _animations;
     [UIView animateWithDuration:self.animationDuration animations:^{
         _self.appearanceBlock(self, self.fullFrame);
     } completion:^(BOOL finished){
-        [self notifyListenersDid:AnimationPhaseIn];
+        [_self notifyListenersDid:AnimationPhaseIn];
     }];
 }
 
@@ -125,13 +135,15 @@ static id<AnimationMachine> _animations;
     } completion:^(BOOL finished){
         _self.hidden = YES;
         [self notifyListenersDid:AnimationPhaseOut];
-        [_self resetFrame];
+        [_self resetView];
     }];
 }
 
-- (void)resetFrame
+- (void)resetView
 {
+    self.clipsToBounds = self.originalClipsToBounds;
     self.frame = self.fullFrame;
+    self.resetBlock(self, self.fullFrame);
     self.fullFrame = CGRectZero;
 }
 

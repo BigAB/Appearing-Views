@@ -22,6 +22,7 @@
 		906C0C65178365090049922D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 906C0C40178365090049922D /* Foundation.framework */; };
 		906C0C7C1783664D0049922D /* ABAppearingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 906C0C7B1783664D0049922D /* ABAppearingView.m */; };
 		9078E889178B6CBA008ED80F /* appearing-views.png in Resources */ = {isa = PBXBuildFile; fileRef = 9078E888178B6CBA008ED80F /* appearing-views.png */; };
+		9078E88C178C6106008ED80F /* repeating-pattern.png in Resources */ = {isa = PBXBuildFile; fileRef = 9078E88B178C6106008ED80F /* repeating-pattern.png */; };
 		9085458817849A3B00A84831 /* ABAppearing View Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9085458717849A3B00A84831 /* ABAppearing View Tests.m */; };
 		9085458B1784C4DB00A84831 /* ABAnimations.m in Sources */ = {isa = PBXBuildFile; fileRef = 9085458A1784C4DB00A84831 /* ABAnimations.m */; };
 		9085458D1784D94000A84831 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9085458C1784D94000A84831 /* QuartzCore.framework */; };
@@ -64,6 +65,7 @@
 		906C0CAD17837F5B0049922D /* Appearing ViewsTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Appearing ViewsTests-Info.plist"; path = "Appearing Views Tests/Appearing ViewsTests-Info.plist"; sourceTree = SOURCE_ROOT; };
 		906C0CB017837F6F0049922D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "Appearing Views Tests/en.lproj/InfoPlist.strings"; sourceTree = SOURCE_ROOT; };
 		9078E888178B6CBA008ED80F /* appearing-views.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appearing-views.png"; sourceTree = "<group>"; };
+		9078E88B178C6106008ED80F /* repeating-pattern.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "repeating-pattern.png"; sourceTree = "<group>"; };
 		9085458717849A3B00A84831 /* ABAppearing View Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "ABAppearing View Tests.m"; path = "Appearing Views Tests/ABAppearing View Tests.m"; sourceTree = SOURCE_ROOT; };
 		908545891784C4DB00A84831 /* ABAnimations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABAnimations.h; sourceTree = "<group>"; };
 		9085458A1784C4DB00A84831 /* ABAnimations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABAnimations.m; sourceTree = "<group>"; };
@@ -148,14 +150,11 @@
 		906C0C45178365090049922D /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				9078E888178B6CBA008ED80F /* appearing-views.png */,
+				9078E88A178C60E1008ED80F /* images */,
 				906C0C46178365090049922D /* Appearing Views Demo-Info.plist */,
 				906C0C47178365090049922D /* InfoPlist.strings */,
 				906C0C4A178365090049922D /* main.m */,
 				906C0C4C178365090049922D /* Appearing Views-Prefix.pch */,
-				906C0C50178365090049922D /* Default.png */,
-				906C0C52178365090049922D /* Default@2x.png */,
-				906C0C54178365090049922D /* Default-568h@2x.png */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -188,6 +187,18 @@
 				9085458A1784C4DB00A84831 /* ABAnimations.m */,
 			);
 			path = "Appearing Views";
+			sourceTree = "<group>";
+		};
+		9078E88A178C60E1008ED80F /* images */ = {
+			isa = PBXGroup;
+			children = (
+				9078E88B178C6106008ED80F /* repeating-pattern.png */,
+				9078E888178B6CBA008ED80F /* appearing-views.png */,
+				906C0C50178365090049922D /* Default.png */,
+				906C0C52178365090049922D /* Default@2x.png */,
+				906C0C54178365090049922D /* Default-568h@2x.png */,
+			);
+			name = images;
 			sourceTree = "<group>";
 		};
 		90854582178498E600A84831 /* Specs */ = {
@@ -278,6 +289,7 @@
 				906C0C55178365090049922D /* Default-568h@2x.png in Resources */,
 				906C0C58178365090049922D /* MainStoryboard.storyboard in Resources */,
 				9078E889178B6CBA008ED80F /* appearing-views.png in Resources */,
+				9078E88C178C6106008ED80F /* repeating-pattern.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -20,13 +20,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.mainTitle.animationDuration = 3;
+    self.mainTitle.animationDuration = 1;
     self.mainTitle.animationType = AnimationTypeFade;
     self.mainTitle.delegate = self;
     
-    
-    self.topBanner.animationDuration = 0.5;
-    self.topBanner.animationType = AnimationTypeFade;// AnimationTypeSlideTop;
+    self.topBanner.animationDuration = 3.5;
+    self.topBanner.animationType = AnimationTypeSlideTop;
     self.topBanner.delegate = self;
 }
 
@@ -85,4 +84,10 @@ willDisappearFromFrame:(CGRect)frame
 {
     NSLog(@"View did disappear");
 }
+
+#pragma mark - Actions
+- (IBAction)dismissTopBanner:(id)sender {
+    [self.topBanner disappear];
+}
+ 
 @end

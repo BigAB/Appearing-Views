@@ -15,11 +15,15 @@
 @property (nonatomic, assign) CGRect fullFrame;
 @property (nonatomic, readonly) FrameAnimationBlock appearancePrepBlock;
 @property (nonatomic, readonly) FrameAnimationBlock appearanceBlock;
+@property (nonatomic, readonly) FrameAnimationBlock disappearanceBlock;
+@property (nonatomic, readonly) FrameAnimationBlock resetBlock;
+
+@property (nonatomic, assign) BOOL originalClipsToBounds;
 
 - (void)prepareForAnimatedAppearance;
 - (void)appearWithAnimation;
 - (void)disappearWithAnimation;
-- (void)resetFrame;
+- (void)resetView;
 @end
 #pragma mark -
 #pragma mark -
@@ -125,6 +129,19 @@ describe(@"Appearing", ^{
             [[theValue(iWasCalled) should] beTrue];
         });
         
+        it(@"should store the current clips to bounds and then set @clipsToBounds to YES", ^{
+            //setup
+            BOOL originalClipsToBounds = NO;
+            appearingView.clipsToBounds = originalClipsToBounds;
+            
+            //expected
+            [[appearingView should] receive:@selector(setOriginalClipsToBounds:) withArguments:theValue(originalClipsToBounds)];
+            [[appearingView should] receive:@selector(setClipsToBounds:) withArguments:theValue(YES)];
+            
+            //actual
+            [appearingView prepareForAnimatedAppearance];
+        });
+        
     });
     
     describe(@"-appearWithAnimation", ^{
@@ -206,7 +223,7 @@ describe(@"Disappearing", ^{
             //expected
             [[appearingView shouldNot] receive:@selector(disappearWithAnimation)];
             [[appearingView shouldNot] receive:@selector(setHidden:)];
-            [[appearingView shouldNot] receive:@selector(resetFrame)];
+            [[appearingView shouldNot] receive:@selector(resetView)];
             
             //actual
             [appearingView disappear];
@@ -229,7 +246,7 @@ describe(@"Disappearing", ^{
             //expected
             [[appearingView shouldNot] receive:@selector(disappearWithAnimation)];
             [[appearingView shouldNot] receive:@selector(setHidden:)];
-            [[appearingView shouldNot] receive:@selector(resetFrame)];
+            [[appearingView shouldNot] receive:@selector(resetView)];
             
             //actual
             [appearingView disappear];
@@ -247,7 +264,7 @@ describe(@"Disappearing", ^{
             //expected
             [[appearingView should] receive:@selector(disappearanceBlock) andReturn:theValue(mockDisappearanceBlock)];
             [[appearingView should] receive:@selector(setHidden:) withArguments:theValue(YES)];
-            [[appearingView should] receive:@selector(resetFrame)];
+            [[appearingView should] receive:@selector(resetView)];
             
             // actual
             [appearingView disappearWithAnimation];
@@ -272,18 +289,64 @@ describe(@"Disappearing", ^{
         });
     });
     
-    describe(@"-resetFrame", ^{
+    describe(@"-resetView", ^{
         
-        it(@"should set teh appearingViews frame to @fullFrame", ^{
+        it(@"should set the appearingViews frame to @fullFrame", ^{
             //setup
             CGRect expecetedFrame = CGRectMake(1, 2, 10, 20);
             appearingView.fullFrame = expecetedFrame;
             appearingView.frame = CGRectZero;
             
             // actual
-            [appearingView resetFrame];
+            [appearingView resetView];
+            
+            //assertion
             [[theValue(appearingView.frame) should] equal:theValue(expecetedFrame)];
         });
+        
+        it(@"should set the @clipsToBounds prperty back to the original value", ^{
+            //setup
+            BOOL originalClipsToBounds = NO;
+            appearingView.originalClipsToBounds = originalClipsToBounds;
+            appearingView.clipsToBounds = YES;
+            
+            //actual
+            [appearingView resetView];
+            
+            //assertion
+            [[theValue(appearingView.clipsToBounds) should] equal:theValue(originalClipsToBounds)];
+            
+            // AGAIN
+            
+            //setup
+            originalClipsToBounds = YES;
+            appearingView.originalClipsToBounds = originalClipsToBounds;
+            appearingView.clipsToBounds = YES;
+            
+            //actual
+            [appearingView resetView];
+            
+            //assertion
+            [[theValue(appearingView.clipsToBounds) should] equal:theValue(originalClipsToBounds)];
+        });
+        
+        it(@"should call the RESET animation to reset the view to it's initial condition", ^{
+            //setup
+            __block BOOL resetWasCalled = NO;
+            FrameAnimationBlock mockResetBlock = ^(UIView *view, CGRect frame) {
+                resetWasCalled = YES;
+            };
+            
+            //expected
+            [[appearingView should] receive:@selector(resetBlock) andReturn:mockResetBlock];
+            
+            //actual
+            [appearingView resetView];
+            
+            //assertion
+            [[theValue(resetWasCalled) should] beTrue];
+        });
+        
     });
     
 });

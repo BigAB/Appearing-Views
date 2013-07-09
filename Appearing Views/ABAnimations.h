@@ -12,6 +12,7 @@ typedef enum {
     AnimationPhasePrep,
     AnimationPhaseIn,
     AnimationPhaseOut,
+    AnimationPhaseReset,
 } AnimationPhase;
 
 typedef enum {
