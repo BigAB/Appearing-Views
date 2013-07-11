@@ -20,6 +20,11 @@ static id<AnimationMachine> _animations;
 
 @property (nonatomic, assign) BOOL originalClipsToBounds;
 
+- (void)appearingViewWillAppear;
+- (void)appearingViewDidAppear;
+- (void)appearingViewWillDisppear;
+- (void)appearingViewDidDisppear;
+
 @end
 
 @implementation ABAppearingView{}
