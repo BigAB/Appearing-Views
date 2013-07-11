@@ -21,6 +21,8 @@
 
 @protocol ABAppearingViewDelagate;
 
+typedef void (^completionBlock)(BOOL finished);
+
 @interface ABAppearingView : UIView
 
 @property (nonatomic, weak) id <ABAppearingViewDelagate>delegate;

@@ -35,6 +35,14 @@ static id<AnimationMachine> _animations;
     _animations = animationsObject;
 }
 
++ (UIWindow *)mainWindow {
+    NSLog(@"Windows: %@", [UIApplication sharedApplication].windows);
+    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    if (!window || ![window isMemberOfClass:[UIWindow class]])
+        window = [[UIApplication sharedApplication].windows objectAtIndex:0];
+    return window;
+}
+
 #pragma mark - LifeCycle
 - (void)_initialization
 {
@@ -122,9 +130,7 @@ static id<AnimationMachine> _animations;
     __block ABAppearingView *_self = self;
     [UIView animateWithDuration:self.animationDuration animations:^{
         _self.appearanceBlock(self, self.fullFrame);
-    } completion:^(BOOL finished){
-        [_self notifyListenersDid:AnimationPhaseIn];
-    }];
+    } completion:[self appearCompletionBlock]];
 }
 
 - (void)disappearWithAnimation
@@ -132,11 +138,25 @@ static id<AnimationMachine> _animations;
     __block ABAppearingView *_self = self;
     [UIView animateWithDuration:self.animationDuration animations:^{
         _self.disappearanceBlock(self, self.frame);
-    } completion:^(BOOL finished){
+    } completion:[self disappearCompletionBlock]];
+}
+
+- (completionBlock)appearCompletionBlock
+{
+    __block ABAppearingView *_self = self;
+    return [^(BOOL finished){
+        [_self notifyListenersDid:AnimationPhaseIn];
+    } copy];
+}
+
+- (completionBlock)disappearCompletionBlock
+{
+    __block ABAppearingView *_self = self;
+    return [^(BOOL finished){
         _self.hidden = YES;
-        [self notifyListenersDid:AnimationPhaseOut];
+        [_self notifyListenersDid:AnimationPhaseOut];
         [_self resetView];
-    }];
+    } copy];
 }
 
 - (void)resetView
