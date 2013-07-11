@@ -103,6 +103,7 @@ static id<AnimationMachine> _animations;
 {
     if (!self.hidden) return;
     if ( ![self notifyListenersWill:AnimationPhaseIn] ) return;
+    [self appearingViewWillAppear];
     
     [self prepareForAnimatedAppearance];
     self.hidden = NO;
@@ -113,6 +114,7 @@ static id<AnimationMachine> _animations;
 {
     if (self.hidden) return;
     if ( ![self notifyListenersWill:AnimationPhaseOut] ) return;
+    [self appearingViewWillDisppear];
     self.fullFrame = self.frame;
     [self disappearWithAnimation];
 }
@@ -146,6 +148,7 @@ static id<AnimationMachine> _animations;
     __block ABAppearingView *_self = self;
     return [^(BOOL finished){
         [_self notifyListenersDid:AnimationPhaseIn];
+        [_self appearingViewDidAppear];
     } copy];
 }
 
@@ -156,6 +159,7 @@ static id<AnimationMachine> _animations;
         _self.hidden = YES;
         [_self notifyListenersDid:AnimationPhaseOut];
         [_self resetView];
+        [_self appearingViewDidDisppear];
     } copy];
 }
 
@@ -165,6 +169,26 @@ static id<AnimationMachine> _animations;
     self.frame = self.fullFrame;
     self.resetBlock(self, self.fullFrame);
     self.fullFrame = CGRectZero;
+}
+
+- (void)appearingViewWillAppear
+{
+    // for subclasses
+}
+
+- (void)appearingViewDidAppear
+{
+    // for subclasses
+}
+
+- (void)appearingViewWillDisppear
+{
+    // for subclasses
+}
+
+- (void)appearingViewDidDisppear
+{
+    // for subclasses
 }
 
 #pragma mark - ABAppearingViewDelagate stuff
