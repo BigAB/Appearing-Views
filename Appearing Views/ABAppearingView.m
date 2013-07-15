@@ -22,8 +22,8 @@ static id<AnimationMachine> _animations;
 
 - (void)appearingViewWillAppear;
 - (void)appearingViewDidAppear;
-- (void)appearingViewWillDisppear;
-- (void)appearingViewDidDisppear;
+- (void)appearingViewWillDisappear;
+- (void)appearingViewDidDisappear;
 
 @end
 
@@ -119,7 +119,7 @@ static id<AnimationMachine> _animations;
 {
     if (self.hidden) return;
     if ( ![self notifyListenersWill:AnimationPhaseOut] ) return;
-    [self appearingViewWillDisppear];
+    [self appearingViewWillDisappear];
     self.fullFrame = self.frame;
     [self disappearWithAnimation];
 }
@@ -164,7 +164,7 @@ static id<AnimationMachine> _animations;
         _self.hidden = YES;
         [_self notifyListenersDid:AnimationPhaseOut];
         [_self resetView];
-        [_self appearingViewDidDisppear];
+        [_self appearingViewDidDisappear];
     } copy];
 }
 
@@ -186,12 +186,12 @@ static id<AnimationMachine> _animations;
     // for subclasses
 }
 
-- (void)appearingViewWillDisppear
+- (void)appearingViewWillDisappear
 {
     // for subclasses
 }
 
-- (void)appearingViewDidDisppear
+- (void)appearingViewDidDisappear
 {
     // for subclasses
 }
