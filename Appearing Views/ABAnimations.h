@@ -26,9 +26,16 @@ typedef enum {
     AnimationTypeRevealBottom,
     AnimationTypeRevealLeft,
     AnimationTypeRevealRight,
+    
+    AnimationTypeSpin,
+    
 } AnimationType;
 
-typedef void (^FrameAnimationBlock)(UIView *view, CGRect frame);
+typedef void (^Block)(void);
+
+typedef void (^CompletionBlock)();
+
+typedef void (^FrameAnimationBlock)(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed);
 
 @protocol AnimationMachine <NSObject>
 

@@ -38,7 +38,7 @@ typedef enum {
     
     animationBlock = self.animationsMap[@(type)][@(phase)];
     if (!animationBlock) {
-        animationBlock = ^(UIView *view, CGRect frame){};
+        animationBlock = ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){};
     }
     
     return [animationBlock copy];
@@ -57,6 +57,7 @@ typedef enum {
                            @(AnimationTypeRevealBottom) : [self revealBottom],
                            @(AnimationTypeRevealLeft) : [self revealLeft],
                            @(AnimationTypeRevealRight) : [self revealRight],
+                           @(AnimationTypeSpin) : [self spin],
                            };
     }
     return _animationsMap;
@@ -104,22 +105,40 @@ typedef enum {
     }];
 }
 
+- (Block)turnView:(UIView *)view byQuarterMagnitude:(CGFloat)magnitude
+{
+    CGFloat mag = (magnitude == 0 ? 1.0 : magnitude);
+    return [^{
+        
+        view.transform = CGAffineTransformRotate(view.transform, M_PI_2*mag);
+        
+    } copy];
+}
+
 #pragma mark - Animations
 #pragma mark -
 
 - (NSDictionary *)fade
 {
     return  @{
-              @(AnimationPhasePrep) : ^(UIView *view, CGRect frame){
+              @(AnimationPhasePrep) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
                   view.alpha = 0;
               },
-              @(AnimationPhaseIn) : ^(UIView *view, CGRect frame){
-                  view.alpha = 1;
+              @(AnimationPhaseIn) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
+                  [UIView animateWithDuration:duration delay:0 options:kNilOptions animations:^{
+                      view.alpha = 1;
+                  } completion:^(BOOL finished) {
+                      completed();
+                  }];
               },
-              @(AnimationPhaseOut) : ^(UIView *view, CGRect frame){
-                  view.alpha = 0;
+              @(AnimationPhaseOut) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
+                  [UIView animateWithDuration:duration delay:0 options:kNilOptions animations:^{
+                      view.alpha = 0;
+                  } completion:^(BOOL finished) {
+                      completed();
+                  }];
               },
-              @(AnimationPhaseReset) : ^(UIView *view, CGRect frame){
+              @(AnimationPhaseReset) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
                   view.alpha = 1;
               },
               };
@@ -129,27 +148,31 @@ typedef enum {
 {
     __block ABAnimations *_self = self;
     return @{
-             @(AnimationPhasePrep) : ^(UIView *view, CGRect frame){
+             @(AnimationPhasePrep) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
                  
                  [_self storeSubviewFramesForView:view];
                  [_self setSubviewsofView:view forFrame:frame axis:y magnitude:-1];
                  view.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 0);
                  
              },
-             @(AnimationPhaseIn) : ^(UIView *view, CGRect frame){
-                 
-                 view.frame = frame;
-                 [_self restoreSubviewFramesForView:view];
-                 
+             @(AnimationPhaseIn) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
+                 [UIView animateWithDuration:duration delay:0 options:kNilOptions animations:^{
+                     view.frame = frame;
+                     [_self restoreSubviewFramesForView:view];
+                 } completion:^(BOOL finished) {
+                     completed();
+                 }];
              },
-             @(AnimationPhaseOut) : ^(UIView *view, CGRect frame){
-                 
-                 [_self storeSubviewFramesForView:view];
-                 [_self setSubviewsofView:view forFrame:frame axis:y magnitude:-1];
-                 view.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 0);
-                 
+             @(AnimationPhaseOut) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
+                 [UIView animateWithDuration:duration delay:0 options:kNilOptions animations:^{
+                     [_self storeSubviewFramesForView:view];
+                     [_self setSubviewsofView:view forFrame:frame axis:y magnitude:-1];
+                     view.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 0);
+                 } completion:^(BOOL finished) {
+                     completed();
+                 }];
              },
-             @(AnimationPhaseReset) : ^(UIView *view, CGRect frame){
+             @(AnimationPhaseReset) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
                  [_self restoreSubviewFramesForView:view];
              },
              };
@@ -158,18 +181,26 @@ typedef enum {
 - (NSDictionary *)slideBottom
 {
     return  @{
-              @(AnimationPhasePrep) : ^(UIView *view, CGRect frame){
+              @(AnimationPhasePrep) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
                   CGFloat newY = frame.origin.y + frame.size.height;
                   view.frame = CGRectMake(frame.origin.x, newY, frame.size.width, 0);
               },
-              @(AnimationPhaseIn) : ^(UIView *view, CGRect frame){
-                  view.frame = frame;
+              @(AnimationPhaseIn) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
+                  [UIView animateWithDuration:duration delay:0 options:kNilOptions animations:^{
+                      view.frame = frame;
+                  } completion:^(BOOL finished) {
+                      completed();
+                  }];
               },
-              @(AnimationPhaseOut) : ^(UIView *view, CGRect frame){
-                  CGFloat newY = frame.origin.y + frame.size.height;
-                  view.frame = CGRectMake(frame.origin.x, newY, frame.size.width, 0);
+              @(AnimationPhaseOut) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
+                  [UIView animateWithDuration:duration delay:0 options:kNilOptions animations:^{
+                      CGFloat newY = frame.origin.y + frame.size.height;
+                      view.frame = CGRectMake(frame.origin.x, newY, frame.size.width, 0);
+                  } completion:^(BOOL finished) {
+                      completed();
+                  }];
               },
-              @(AnimationPhaseReset) : ^(UIView *view, CGRect frame){},
+              @(AnimationPhaseReset) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){},
               };
 }
 
@@ -177,7 +208,7 @@ typedef enum {
 {
     __block ABAnimations *_self = self;
     return  @{
-              @(AnimationPhasePrep) : ^(UIView *view, CGRect frame){
+              @(AnimationPhasePrep) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
                   
                   [_self storeSubviewFramesForView:view];
                   [_self setSubviewsofView:view forFrame:frame axis:x magnitude:-1];
@@ -185,21 +216,25 @@ typedef enum {
                   view.frame = CGRectMake(newX, frame.origin.y, 0, frame.size.height);
                   
               },
-              @(AnimationPhaseIn) : ^(UIView *view, CGRect frame){
-                  
-                  view.frame = frame;
-                  [_self restoreSubviewFramesForView:view];
-                  
+              @(AnimationPhaseIn) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
+                  [UIView animateWithDuration:duration delay:0 options:kNilOptions animations:^{
+                      view.frame = frame;
+                      [_self restoreSubviewFramesForView:view];
+                  } completion:^(BOOL finished) {
+                      completed();
+                  }];
               },
-              @(AnimationPhaseOut) : ^(UIView *view, CGRect frame){
-                  
-                  [_self storeSubviewFramesForView:view];
-                  [_self setSubviewsofView:view forFrame:frame axis:x magnitude:-1];
-                  CGFloat newX = frame.origin.x - frame.size.width;
-                  view.frame = CGRectMake(newX, frame.origin.y, 0, frame.size.height);
-                  
+              @(AnimationPhaseOut) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
+                  [UIView animateWithDuration:duration delay:0 options:kNilOptions animations:^{
+                      [_self storeSubviewFramesForView:view];
+                      [_self setSubviewsofView:view forFrame:frame axis:x magnitude:-1];
+                      CGFloat newX = frame.origin.x - frame.size.width;
+                      view.frame = CGRectMake(newX, frame.origin.y, 0, frame.size.height);
+                  } completion:^(BOOL finished) {
+                      completed();
+                  }];
               },
-              @(AnimationPhaseReset) : ^(UIView *view, CGRect frame){
+              @(AnimationPhaseReset) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
                   [_self restoreSubviewFramesForView:view];
               },
               };
@@ -208,38 +243,52 @@ typedef enum {
 - (NSDictionary *)slideRight
 {
     return  @{
-              @(AnimationPhasePrep) : ^(UIView *view, CGRect frame){
+              @(AnimationPhasePrep) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
                   
                   CGFloat newX = frame.origin.x + frame.size.width;
                   view.frame = CGRectMake(newX, frame.origin.y, 0, frame.size.height);
                   
               },
-              @(AnimationPhaseIn) : ^(UIView *view, CGRect frame){
-                  view.frame = frame;
+              @(AnimationPhaseIn) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
+                  [UIView animateWithDuration:duration delay:0 options:kNilOptions animations:^{
+                      view.frame = frame;
+                  } completion:^(BOOL finished) {
+                      completed();
+                  }];
               },
-              @(AnimationPhaseOut) : ^(UIView *view, CGRect frame){
-                  
-                  CGFloat newX = frame.origin.x + frame.size.width;
-                  view.frame = CGRectMake(newX, frame.origin.y, 0, frame.size.height);
-                  
+              @(AnimationPhaseOut) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
+                  [UIView animateWithDuration:duration delay:0 options:kNilOptions animations:^{
+                      CGFloat newX = frame.origin.x + frame.size.width;
+                      view.frame = CGRectMake(newX, frame.origin.y, 0, frame.size.height);
+                  } completion:^(BOOL finished) {
+                      completed();
+                  }];
               },
-              @(AnimationPhaseReset) : ^(UIView *view, CGRect frame){},
+              @(AnimationPhaseReset) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){},
               };
 }
 
 - (NSDictionary *)revealTop
 {
     return  @{
-              @(AnimationPhasePrep) : ^(UIView *view, CGRect frame){
+              @(AnimationPhasePrep) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
                   view.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 0);
               },
-              @(AnimationPhaseIn) : ^(UIView *view, CGRect frame){
-                  view.frame = frame;
+              @(AnimationPhaseIn) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
+                  [UIView animateWithDuration:duration delay:0 options:kNilOptions animations:^{
+                      view.frame = frame;
+                  } completion:^(BOOL finished) {
+                      completed();
+                  }];
               },
-              @(AnimationPhaseOut) : ^(UIView *view, CGRect frame){
-                  view.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 0);
+              @(AnimationPhaseOut) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
+                  [UIView animateWithDuration:duration delay:0 options:kNilOptions animations:^{
+                      view.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 0);
+                  } completion:^(BOOL finished) {
+                      completed();
+                  }];
               },
-              @(AnimationPhaseReset) : ^(UIView *view, CGRect frame){},
+              @(AnimationPhaseReset) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){},
               };
 }
 
@@ -247,21 +296,29 @@ typedef enum {
 {
     __block ABAnimations *_self = self;
     return  @{
-              @(AnimationPhasePrep) : ^(UIView *view, CGRect frame){
+              @(AnimationPhasePrep) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
                   [_self storeSubviewFramesForView:view];
                   [_self setSubviewsofView:view forFrame:frame axis:y magnitude:-1];
                   view.frame = CGRectMake(frame.origin.x, frame.origin.y + frame.size.height, frame.size.width, 0);
               },
-              @(AnimationPhaseIn) : ^(UIView *view, CGRect frame){
-                  [_self restoreSubviewFramesForView:view];
-                  view.frame = frame;
+              @(AnimationPhaseIn) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
+                  [UIView animateWithDuration:duration delay:0 options:kNilOptions animations:^{
+                      [_self restoreSubviewFramesForView:view];
+                      view.frame = frame;
+                  } completion:^(BOOL finished) {
+                      completed();
+                  }];
               },
-              @(AnimationPhaseOut) : ^(UIView *view, CGRect frame){
-                  [_self storeSubviewFramesForView:view];
-                  [_self setSubviewsofView:view forFrame:frame axis:y magnitude:-1];
-                  view.frame = CGRectMake(frame.origin.x, frame.origin.y + frame.size.height, frame.size.width, 0);
+              @(AnimationPhaseOut) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
+                  [UIView animateWithDuration:duration delay:0 options:kNilOptions animations:^{
+                      [_self storeSubviewFramesForView:view];
+                      [_self setSubviewsofView:view forFrame:frame axis:y magnitude:-1];
+                      view.frame = CGRectMake(frame.origin.x, frame.origin.y + frame.size.height, frame.size.width, 0);
+                  } completion:^(BOOL finished) {
+                      completed();
+                  }];
               },
-              @(AnimationPhaseReset) : ^(UIView *view, CGRect frame){
+              @(AnimationPhaseReset) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
                 [_self restoreSubviewFramesForView:view];
               },
               };
@@ -270,16 +327,24 @@ typedef enum {
 - (NSDictionary *)revealLeft
 {
     return  @{
-              @(AnimationPhasePrep) : ^(UIView *view, CGRect frame){
+              @(AnimationPhasePrep) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
                   view.frame = CGRectMake(frame.origin.x, frame.origin.y, 0, frame.size.height);
               },
-              @(AnimationPhaseIn) : ^(UIView *view, CGRect frame){
-                  view.frame = frame;
+              @(AnimationPhaseIn) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
+                  [UIView animateWithDuration:duration delay:0 options:kNilOptions animations:^{
+                      view.frame = frame;
+                  } completion:^(BOOL finished) {
+                      completed();
+                  }];
               },
-              @(AnimationPhaseOut) : ^(UIView *view, CGRect frame){
-                  view.frame = CGRectMake(frame.origin.x, frame.origin.y, 0, frame.size.height);
+              @(AnimationPhaseOut) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
+                  [UIView animateWithDuration:duration delay:0 options:kNilOptions animations:^{
+                      view.frame = CGRectMake(frame.origin.x, frame.origin.y, 0, frame.size.height);
+                  } completion:^(BOOL finished) {
+                      completed();
+                  }];
               },
-              @(AnimationPhaseReset) : ^(UIView *view, CGRect frame){},
+              @(AnimationPhaseReset) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){},
               };
 }
 
@@ -287,22 +352,104 @@ typedef enum {
 {
     __block ABAnimations *_self = self;
     return  @{
-              @(AnimationPhasePrep) : ^(UIView *view, CGRect frame){
+              @(AnimationPhasePrep) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
                   [_self storeSubviewFramesForView:view];
                   [_self setSubviewsofView:view forFrame:frame axis:x magnitude:-1];
+                  
                   view.frame = CGRectMake(frame.origin.x + frame.size.width, frame.origin.y, 0, frame.size.height);
               },
-              @(AnimationPhaseIn) : ^(UIView *view, CGRect frame){
-                  [_self restoreSubviewFramesForView:view];
-                  view.frame = frame;
+              @(AnimationPhaseIn) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
+                  [UIView animateWithDuration:duration delay:0 options:kNilOptions animations:^{
+                      [_self restoreSubviewFramesForView:view];
+                      view.frame = frame;
+                  } completion:^(BOOL finished) {
+                      completed();
+                  }];
               },
-              @(AnimationPhaseOut) : ^(UIView *view, CGRect frame){
-                  [_self storeSubviewFramesForView:view];
-                  [_self setSubviewsofView:view forFrame:frame axis:x magnitude:-1];
-                  view.frame = CGRectMake(frame.origin.x + frame.size.width, frame.origin.y, 0, frame.size.height);
+              @(AnimationPhaseOut) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
+                  [UIView animateWithDuration:duration delay:0 options:kNilOptions animations:^{
+                      [_self storeSubviewFramesForView:view];
+                      [_self setSubviewsofView:view forFrame:frame axis:x magnitude:-1];
+                      view.frame = CGRectMake(frame.origin.x + frame.size.width, frame.origin.y, 0, frame.size.height);
+                  } completion:^(BOOL finished) {
+                      completed();
+                  }];
               },
-              @(AnimationPhaseReset) : ^(UIView *view, CGRect frame){
+              @(AnimationPhaseReset) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
                   [_self restoreSubviewFramesForView:view];
+              },
+              };
+}
+
+- (NSDictionary *)spin
+{
+    //__block ABAnimations *_self = self;
+    return  @{
+              @(AnimationPhasePrep) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
+                  view.transform = CGAffineTransformMakeScale(0.1, 0.1);
+                  completed();
+              },
+              @(AnimationPhaseIn) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
+                  UIViewAnimationOptions options = UIViewAnimationOptionCurveLinear;
+                  
+                  __block CGAffineTransform transform = view.transform;
+                  
+                  [UIView animateWithDuration:duration/3.0 delay:0 options:options animations:^{
+                      transform = CGAffineTransformScale(transform, 10, 10);
+                      view.transform = CGAffineTransformRotate(transform, -M_PI_2);
+                      
+                  } completion:^(BOOL finished){
+                      //stops the chain
+                      if(! finished) {
+                          completed();
+                          return;
+                      }
+                      
+                      //animation 2
+                      [UIView animateWithDuration:duration/3.0 delay:0 options:options  animations:^{
+                          transform = CGAffineTransformScale(transform, 2, 2);
+                          view.transform = CGAffineTransformRotate(transform, -2*M_PI_2);
+                          
+                      } completion:^(BOOL finished){
+                          //stops the chain
+                          if(! finished) {
+                              completed();
+                              return;
+                          }
+                          
+                          //animation 3
+                          [UIView animateWithDuration:duration/3.0 delay:0 options:options  animations:^{
+                              transform = CGAffineTransformScale(transform, 0.8, 0.8);
+                              view.transform = CGAffineTransformRotate(transform, -3*M_PI_2);
+                              
+                          } completion:^(BOOL finished){
+                              //stops the chain
+                              if(! finished) {
+                                  completed();
+                                  return;
+                              }
+                              //animation 4
+                              [UIView animateWithDuration:duration/3.0 delay:0 options:options animations:^{
+                                  view.transform = CGAffineTransformIdentity;
+                              } completion:^(BOOL finished){
+                                  completed();
+                              }];
+                              
+                          }];
+                      }];
+                  }];
+                  
+              },
+              @(AnimationPhaseOut) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
+                  [UIView animateWithDuration:duration delay:0 options:kNilOptions animations:^{
+                      view.alpha = 0;
+                  } completion:^(BOOL finished) {
+                      completed();
+                  }];
+              },
+              @(AnimationPhaseReset) : ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed){
+                  view.alpha = 1;
+                  completed();
               },
               };
 }

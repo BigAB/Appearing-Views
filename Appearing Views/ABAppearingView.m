@@ -129,38 +129,32 @@ static id<AnimationMachine> _animations;
     self.fullFrame = self.frame;
     self.originalClipsToBounds = self.clipsToBounds;
     self.clipsToBounds = YES;
-    self.appearancePrepBlock(self, self.fullFrame);
+    self.appearancePrepBlock(self, self.fullFrame, self.animationDuration, ^(){});
 }
 
 - (void)appearWithAnimation
 {
-    __block ABAppearingView *_self = self;
-    [UIView animateWithDuration:self.animationDuration animations:^{
-        _self.appearanceBlock(self, self.fullFrame);
-    } completion:[self appearCompletionBlock]];
+    self.appearanceBlock(self, self.fullFrame, self.animationDuration, [self appearCompletionBlock]);
 }
 
 - (void)disappearWithAnimation
 {
-    __block ABAppearingView *_self = self;
-    [UIView animateWithDuration:self.animationDuration animations:^{
-        _self.disappearanceBlock(self, self.frame);
-    } completion:[self disappearCompletionBlock]];
+    self.disappearanceBlock(self, self.frame, self.animationDuration, [self disappearCompletionBlock]);
 }
 
-- (completionBlock)appearCompletionBlock
+- (CompletionBlock)appearCompletionBlock
 {
     __block ABAppearingView *_self = self;
-    return [^(BOOL finished){
+    return [^(){
         [_self notifyListenersDid:AnimationPhaseIn];
         [_self appearingViewDidAppear];
     } copy];
 }
 
-- (completionBlock)disappearCompletionBlock
+- (CompletionBlock)disappearCompletionBlock
 {
     __block ABAppearingView *_self = self;
-    return [^(BOOL finished){
+    return [^(){
         _self.hidden = YES;
         [_self notifyListenersDid:AnimationPhaseOut];
         [_self resetView];
@@ -172,7 +166,7 @@ static id<AnimationMachine> _animations;
 {
     self.clipsToBounds = self.originalClipsToBounds;
     self.frame = self.fullFrame;
-    self.resetBlock(self, self.fullFrame);
+    self.resetBlock(self, self.fullFrame, self.animationDuration, ^(){});
     self.fullFrame = CGRectZero;
 }
 

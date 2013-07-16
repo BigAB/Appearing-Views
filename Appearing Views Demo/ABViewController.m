@@ -58,8 +58,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.mainTitle.animationDuration = 1;
-    self.mainTitle.animationType = AnimationTypeFade;
+    self.mainTitle.animationDuration = 0.5;
+    self.mainTitle.animationType = AnimationTypeSpin;
     self.mainTitle.delegate = self;
     
     self.topBanner.animationDuration = 0.5;
