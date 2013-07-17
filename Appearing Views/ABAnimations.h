@@ -33,18 +33,18 @@ typedef enum {
 
 typedef void (^Block)(void);
 
-typedef void (^CompletionBlock)();
+typedef void (^CompletionCallback)();
 
-typedef void (^FrameAnimationBlock)(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed);
+typedef void (^AVAnimationBlock)(UIView *view, CGRect frame, NSTimeInterval duration, CompletionCallback completed);
 
 @protocol AnimationMachine <NSObject>
 
-- (FrameAnimationBlock)animationBlockWithType:(AnimationType)type phase:(AnimationPhase)phase;
+- (AVAnimationBlock)animationBlockWithType:(AnimationType)type phase:(AnimationPhase)phase;
 
 @end
 
 @interface ABAnimations : NSObject<AnimationMachine>
 
-- (FrameAnimationBlock)animationBlockWithType:(AnimationType)type phase:(AnimationPhase)phase;
+- (AVAnimationBlock)animationBlockWithType:(AnimationType)type phase:(AnimationPhase)phase;
 
 @end

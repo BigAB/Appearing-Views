@@ -13,10 +13,10 @@ static id<AnimationMachine> _animations;
 @interface ABAppearingView()
 
 @property (nonatomic, assign) CGRect fullFrame;
-@property (nonatomic, readonly) FrameAnimationBlock appearancePrepBlock;
-@property (nonatomic, readonly) FrameAnimationBlock appearanceBlock;
-@property (nonatomic, readonly) FrameAnimationBlock disappearanceBlock;
-@property (nonatomic, readonly) FrameAnimationBlock resetBlock;
+@property (nonatomic, readonly) AVAnimationBlock appearancePrepBlock;
+@property (nonatomic, readonly) AVAnimationBlock appearanceBlock;
+@property (nonatomic, readonly) AVAnimationBlock disappearanceBlock;
+@property (nonatomic, readonly) AVAnimationBlock resetBlock;
 
 @property (nonatomic, assign) BOOL originalClipsToBounds;
 
@@ -74,22 +74,22 @@ static id<AnimationMachine> _animations;
 }
 
 #pragma mark - Property Accessors
-- (FrameAnimationBlock)appearancePrepBlock
+- (AVAnimationBlock)appearancePrepBlock
 {
     return [_animations animationBlockWithType:self.animationType phase:AnimationPhasePrep];
 }
 
--(FrameAnimationBlock)appearanceBlock
+-(AVAnimationBlock)appearanceBlock
 {
     return [_animations animationBlockWithType:self.animationType phase:AnimationPhaseIn];
 }
 
--(FrameAnimationBlock)disappearanceBlock
+-(AVAnimationBlock)disappearanceBlock
 {
     return [_animations animationBlockWithType:self.animationType phase:AnimationPhaseOut];
 }
 
--(FrameAnimationBlock)resetBlock
+-(AVAnimationBlock)resetBlock
 {
     return [_animations animationBlockWithType:self.animationType phase:AnimationPhaseReset];
 }
@@ -139,10 +139,10 @@ static id<AnimationMachine> _animations;
 
 - (void)disappearWithAnimation
 {
-    self.disappearanceBlock(self, self.frame, self.animationDuration, [self disappearCompletionBlock]);
+    self.disappearanceBlock(self, self.fullFrame, self.animationDuration, [self disappearCompletionBlock]);
 }
 
-- (CompletionBlock)appearCompletionBlock
+- (CompletionCallback)appearCompletionBlock
 {
     __block ABAppearingView *_self = self;
     return [^(){
@@ -151,7 +151,7 @@ static id<AnimationMachine> _animations;
     } copy];
 }
 
-- (CompletionBlock)disappearCompletionBlock
+- (CompletionCallback)disappearCompletionBlock
 {
     __block ABAppearingView *_self = self;
     return [^(){

@@ -13,10 +13,10 @@
 @interface ABAppearingView()
 
 @property (nonatomic, assign) CGRect fullFrame;
-@property (nonatomic, readonly) FrameAnimationBlock appearancePrepBlock;
-@property (nonatomic, readonly) FrameAnimationBlock appearanceBlock;
-@property (nonatomic, readonly) FrameAnimationBlock disappearanceBlock;
-@property (nonatomic, readonly) FrameAnimationBlock resetBlock;
+@property (nonatomic, readonly) AVAnimationBlock appearancePrepBlock;
+@property (nonatomic, readonly) AVAnimationBlock appearanceBlock;
+@property (nonatomic, readonly) AVAnimationBlock disappearanceBlock;
+@property (nonatomic, readonly) AVAnimationBlock resetBlock;
 
 @property (nonatomic, assign) BOOL originalClipsToBounds;
 
@@ -114,7 +114,7 @@ describe(@"Appearing", ^{
             //setup
             [[theValue(appearingView.fullFrame) should] equal:theValue(CGRectZero)];
             __block BOOL iWasCalled = NO;
-            FrameAnimationBlock mockAppearancePrepBlock = ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed) {
+            AVAnimationBlock mockAppearancePrepBlock = ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionCallback completed) {
                 iWasCalled = YES;
             };
             
@@ -146,15 +146,38 @@ describe(@"Appearing", ^{
     
     describe(@"-appearWithAnimation", ^{
         
-        pending(@"should animate the view based on animationType and animationDuration", ^{
+        it(@"should execute the animation block, passing in the view, frame, duration and completionCallback", ^{
             //setup
-            appearingView.animationDuration = 12.0f;
+            __block UIView *actualView;
+            __block CGRect actualFrame;
+            __block NSTimeInterval actualDuration;
+            __block CompletionCallback actualCompletionBlock;
+            
+            CGRect frame = CGRectMake(1,2,3,4);
+            NSTimeInterval duration = 12.0f;
+            CompletionCallback completedCallback = ^(){};
+            
+            appearingView.animationDuration = duration;
+            appearingView.fullFrame = frame;
+            AVAnimationBlock mockAnimationBlock =  ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionCallback completed){
+                actualView = view;
+                actualFrame = frame;
+                actualDuration = duration;
+                actualCompletionBlock = completed;
+            };
             
             //expected
-            [[UIView should] receive:@selector(animateWithDuration:animations:completion:) withArguments:theValue(appearingView.animationDuration), any(), any()]; // any() <- just the block defined in the method itself
+            [[appearingView should] receive:@selector(appearCompletionBlock) andReturn:completedCallback];
+            [[appearingView should] receive:@selector(appearanceBlock) andReturn:mockAnimationBlock];
             
             //actual
             [appearingView appearWithAnimation];
+            
+            //assertion
+            [[actualView should] beIdenticalTo:appearingView];
+            [[theValue(actualFrame) should] equal:theValue(frame)];
+            [[theValue(actualDuration) should] equal:theValue(duration)];
+            [[theValue(actualCompletionBlock) should] equal:theValue(completedCallback)];
         });
         
         it(@"should call the animation for phaseIn with self.fullFrame", ^{
@@ -162,7 +185,7 @@ describe(@"Appearing", ^{
             CGRect expectedFrame = CGRectMake(1, 2, 3, 4);
             [[theValue(appearingView.fullFrame) should] equal:theValue(CGRectZero)];
             __block CGRect theFrame;
-            FrameAnimationBlock mockAppearanceBlock = ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed) {
+            AVAnimationBlock mockAppearanceBlock = ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionCallback completed) {
                 theFrame = frame;
             };
             
@@ -177,18 +200,19 @@ describe(@"Appearing", ^{
             [[theValue(theFrame) should] equal:theValue(expectedFrame)];
         });
         
-        pending(@"should notify the delegate and the notification center that it DID animate in, after it appearsWithAnimation", ^{
+        it(@"should notify the delegate and the notification center that it DID animate in, after it appearsWithAnimation", ^{
             //setup
-            KWCaptureSpy *completionSpy = [UIView captureArgument:@selector(animateWithDuration:animations:completion:) atIndex:2];
+            AVAnimationBlock mockAppearanceBlock = ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionCallback completed) {
+                completed();
+            };
             
             //expected
-            [appearingView appearWithAnimation];
-            void (^completionBlock)(BOOL finished) = completionSpy.argument;
-            
+            [[appearingView should] receive:@selector(appearanceBlock) andReturn:theValue(mockAppearanceBlock)];
             [[appearingView should] receive:@selector(notifyListenersDid:) withArguments:theValue(AnimationPhaseIn)];
+            [[appearingView should] receive:@selector(appearingViewDidAppear)];
             
             // actual
-            completionBlock(YES);
+            [appearingView appearWithAnimation];
         });
         
     });
@@ -256,37 +280,57 @@ describe(@"Disappearing", ^{
     
     describe(@"-disappearWithAnimation", ^{
         
-        pending(@"should animate out, THEN become invisible, then return to its full frame", ^{
+        it(@"should execute the dissappear animation block, passing in the view, frame, duration and completionCallback", ^{
             //setup
-            FrameAnimationBlock mockDisappearanceBlock = ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed) {};
-            KWCaptureSpy *completionSpy = [UIView captureArgument:@selector(animateWithDuration:animations:completion:) atIndex:2];
+            __block UIView *actualView;
+            __block CGRect actualFrame;
+            __block NSTimeInterval actualDuration;
+            __block CompletionCallback actualCompletionBlock;
+            
+            CGRect frame = CGRectMake(4,3,2,1);
+            NSTimeInterval duration = 12.0f;
+            CompletionCallback completedCallback = ^(){};
+            
+            appearingView.animationDuration = duration;
+            appearingView.fullFrame = frame;
+            AVAnimationBlock mockAnimationBlock =  ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionCallback completed){
+                actualView = view;
+                actualFrame = frame;
+                actualDuration = duration;
+                actualCompletionBlock = completed;
+                completed();
+            };
+            
+            //expected
+            [[appearingView should] receive:@selector(disappearCompletionBlock) andReturn:completedCallback];
+            [[appearingView should] receive:@selector(disappearanceBlock) andReturn:mockAnimationBlock];
+            
+            //actual
+            [appearingView disappearWithAnimation];
+            
+            //assertion
+            [[actualView should] beIdenticalTo:appearingView];
+            [[theValue(actualFrame) should] equal:theValue(frame)];
+            [[theValue(actualDuration) should] equal:theValue(duration)];
+            [[theValue(actualCompletionBlock) should] equal:theValue(completedCallback)];
+        });
+        
+        
+        it(@"should notify the delegate and the notification center that it DID animate out, after it disappearsWithAnimation", ^{
+            //setup
+            AVAnimationBlock mockDisappearanceBlock = ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionCallback completed) {
+                completed();
+            };
             
             //expected
             [[appearingView should] receive:@selector(disappearanceBlock) andReturn:theValue(mockDisappearanceBlock)];
-            [[appearingView should] receive:@selector(setHidden:) withArguments:theValue(YES)];
-            [[appearingView should] receive:@selector(resetView)];
-            
-            // actual
-            [appearingView disappearWithAnimation];
-            void (^completionBlock)(BOOL finished) = completionSpy.argument;
-            completionBlock(YES);
-            
-        });
-        
-        
-        pending(@"should notify the delegate and the notification center that it DID animate out, after it disappearsWithAnimation", ^{
-            //setup
-            KWCaptureSpy *completionSpy = [UIView captureArgument:@selector(animateWithDuration:animations:completion:) atIndex:2];
-            
-            //expected
-            [appearingView disappearWithAnimation];
-            void (^completionBlock)(BOOL finished) = completionSpy.argument;
-            
             [[appearingView should] receive:@selector(notifyListenersDid:) withArguments:theValue(AnimationPhaseOut)];
+            [[appearingView should] receive:@selector(appearingViewDidDisappear)];
             
             // actual
-            completionBlock(YES);
+             [appearingView disappearWithAnimation];
         });
+        
     });
     
     describe(@"-resetView", ^{
@@ -333,7 +377,7 @@ describe(@"Disappearing", ^{
         it(@"should call the RESET animation to reset the view to it's initial condition", ^{
             //setup
             __block BOOL resetWasCalled = NO;
-            FrameAnimationBlock mockResetBlock = ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionBlock completed) {
+            AVAnimationBlock mockResetBlock = ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionCallback completed) {
                 resetWasCalled = YES;
             };
             
