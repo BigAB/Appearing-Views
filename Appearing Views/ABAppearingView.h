@@ -40,7 +40,7 @@
 @protocol ABAppearingViewDelagate <NSObject>
 @optional
 
-- (BOOL)appearingView:(ABAppearingView *)view
+- (void)appearingView:(ABAppearingView *)view
     willAppearToFrame:(CGRect)frame
         animationType:(AnimationType)type
              duration:(NSTimeInterval)duration
@@ -48,7 +48,7 @@
 
 - (void)appearingViewDidAppear:(ABAppearingView *)view;
 
-- (BOOL)appearingView:(ABAppearingView *)view
+- (void)appearingView:(ABAppearingView *)view
 willDisappearFromFrame:(CGRect)frame
         animationType:(AnimationType)type
              duration:(NSTimeInterval)duration

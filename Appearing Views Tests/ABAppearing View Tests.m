@@ -91,20 +91,6 @@ describe(@"Appearing", ^{
             [appearingView appear];
         });
         
-        it(@"should do nothing if the delegate responds NO to willappearWithAnimation", ^{
-            //setup
-            id delegateMock = [KWMock mockForProtocol:@protocol(ABAppearingViewDelagate)];
-            [delegateMock stub:@selector(appearingView:willAppearToFrame:animationType:duration:options:) andReturn:theValue(NO)];
-            appearingView.delegate = delegateMock;
-            
-            //expected
-            [[appearingView shouldNot] receive:@selector(prepareForAnimatedAppearance)];
-            [[appearingView shouldNot] receive:@selector(setHidden:)];
-            [[appearingView shouldNot] receive:@selector(appearWithAnimation)];
-            
-            //actual
-            [appearingView appear];
-        });
         
     });
     
@@ -256,21 +242,6 @@ describe(@"Disappearing", ^{
         it(@"should notify the delegate and the notification center that it is about to animate out", ^{
             // expected
             [[appearingView should] receive:@selector(notifyListenersWill:) withArguments:theValue(AnimationPhaseOut)];
-            
-            //actual
-            [appearingView disappear];
-        });
-        
-        it(@"should do nothing if the delegate responds NO to willDisappearWithAnimation", ^{
-            //setup
-            id delegateMock = [KWMock mockForProtocol:@protocol(ABAppearingViewDelagate)];
-            [delegateMock stub:@selector(appearingView:willDisappearFromFrame:animationType:duration:options:) andReturn:theValue(NO)];
-            appearingView.delegate = delegateMock;
-            
-            //expected
-            [[appearingView shouldNot] receive:@selector(disappearWithAnimation)];
-            [[appearingView shouldNot] receive:@selector(setHidden:)];
-            [[appearingView shouldNot] receive:@selector(resetView)];
             
             //actual
             [appearingView disappear];

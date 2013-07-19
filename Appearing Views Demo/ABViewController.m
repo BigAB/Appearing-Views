@@ -98,7 +98,7 @@
     [super viewDidUnload];
 }
 
-- (BOOL)appearingView:(ABAppearingView *)view
+- (void)appearingView:(ABAppearingView *)view
     willAppearToFrame:(CGRect)frame
         animationType:(AnimationType)type
              duration:(NSTimeInterval)duration
@@ -113,8 +113,6 @@
             _self.pressMe.frame = CGRectMake(30, f.origin.y, f.size.width, f.size.height);
         } completion:nil];
     }
-    
-    return YES;
 }
 
 - (void)appearingViewDidAppear:(ABAppearingView *)view
@@ -136,7 +134,7 @@
     
 }
 
-- (BOOL)appearingView:(ABAppearingView *)view
+- (void)appearingView:(ABAppearingView *)view
 willDisappearFromFrame:(CGRect)frame
         animationType:(AnimationType)type
              duration:(NSTimeInterval)duration
@@ -150,8 +148,6 @@ willDisappearFromFrame:(CGRect)frame
             _self.pressMe.frame = CGRectMake(self.pressMeX, f.origin.y, f.size.width, f.size.height);
         } completion:nil];
     }
-    
-    return YES;
 }
 
 - (void)appearingViewDidDisappear:(ABAppearingView *)view

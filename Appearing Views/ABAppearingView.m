@@ -107,10 +107,10 @@ static id<AnimationMachine> _animations;
 - (void)appear
 {
     if (!self.hidden) return;
-    if ( ![self notifyListenersWill:AnimationPhaseIn] ) return;
+    [self prepareForAnimatedAppearance];
+    [self notifyListenersWill:AnimationPhaseIn];
     [self appearingViewWillAppear];
     
-    [self prepareForAnimatedAppearance];
     self.hidden = NO;
     [self appearWithAnimation];
 }
@@ -118,7 +118,7 @@ static id<AnimationMachine> _animations;
 - (void)disappear
 {
     if (self.hidden) return;
-    if ( ![self notifyListenersWill:AnimationPhaseOut] ) return;
+    [self notifyListenersWill:AnimationPhaseOut];
     [self appearingViewWillDisappear];
     self.fullFrame = self.frame;
     [self disappearWithAnimation];
@@ -216,15 +216,14 @@ static id<AnimationMachine> _animations;
     
 }
 
-- (BOOL)notifyListenersWill:(AnimationPhase)phase
+- (void)notifyListenersWill:(AnimationPhase)phase
 {
     NSDictionary *animationInfo = [self animationInfo];
-    BOOL itWill = YES;
     
     switch (phase) {
         case AnimationPhaseIn:
             if (self.delegate && [self.delegate respondsToSelector:@selector(appearingView:willAppearToFrame:animationType:duration:options:)]) {
-                itWill = [self.delegate appearingView:self
+                [self.delegate appearingView:self
                                     willAppearToFrame:[animationInfo[AppearingViewFrameKey] CGRectValue]
                                         animationType:[animationInfo[AppearingViewTypeKey] intValue]
                                              duration:[animationInfo[AppearingViewDurationKey] floatValue]
@@ -236,7 +235,7 @@ static id<AnimationMachine> _animations;
             
         case AnimationPhaseOut:
             if (self.delegate && [self.delegate respondsToSelector:@selector(appearingView:willDisappearFromFrame:animationType:duration:options:)]) {
-                itWill = [self.delegate appearingView:self
+                [self.delegate appearingView:self
                                willDisappearFromFrame:[animationInfo[AppearingViewFrameKey] CGRectValue]
                                         animationType:[animationInfo[AppearingViewTypeKey] intValue]
                                              duration:[animationInfo[AppearingViewDurationKey] floatValue]
@@ -250,7 +249,6 @@ static id<AnimationMachine> _animations;
         default:
             break;
     }
-    return itWill;
 }
 
 - (NSDictionary *)animationInfo
