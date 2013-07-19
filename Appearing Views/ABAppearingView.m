@@ -118,9 +118,9 @@ static id<AnimationMachine> _animations;
 - (void)disappear
 {
     if (self.hidden) return;
+    self.fullFrame = self.frame;
     [self notifyListenersWill:AnimationPhaseOut];
     [self appearingViewWillDisappear];
-    self.fullFrame = self.frame;
     [self disappearWithAnimation];
 }
 
@@ -156,8 +156,8 @@ static id<AnimationMachine> _animations;
     __block ABAppearingView *_self = self;
     return [^(){
         _self.hidden = YES;
-        [_self notifyListenersDid:AnimationPhaseOut];
         [_self resetView];
+        [_self notifyListenersDid:AnimationPhaseOut];
         [_self appearingViewDidDisappear];
     } copy];
 }
@@ -224,11 +224,11 @@ static id<AnimationMachine> _animations;
         case AnimationPhaseIn:
             if (self.delegate && [self.delegate respondsToSelector:@selector(appearingView:willAppearToFrame:animationType:duration:options:)]) {
                 [self.delegate appearingView:self
-                                    willAppearToFrame:[animationInfo[AppearingViewFrameKey] CGRectValue]
-                                        animationType:[animationInfo[AppearingViewTypeKey] intValue]
-                                             duration:[animationInfo[AppearingViewDurationKey] floatValue]
-                                              options:[animationInfo[AppearingViewOptionsKey] intValue]
-                          ];
+                           willAppearToFrame:[animationInfo[AppearingViewFrameKey] CGRectValue]
+                               animationType:[animationInfo[AppearingViewTypeKey] intValue]
+                                    duration:[animationInfo[AppearingViewDurationKey] floatValue]
+                                     options:[animationInfo[AppearingViewOptionsKey] intValue]
+                 ];
             }
             [self.notificationCenter postNotificationName:AppearingViewWillAppear object:self userInfo:animationInfo];
             break;
@@ -236,11 +236,11 @@ static id<AnimationMachine> _animations;
         case AnimationPhaseOut:
             if (self.delegate && [self.delegate respondsToSelector:@selector(appearingView:willDisappearFromFrame:animationType:duration:options:)]) {
                 [self.delegate appearingView:self
-                               willDisappearFromFrame:[animationInfo[AppearingViewFrameKey] CGRectValue]
-                                        animationType:[animationInfo[AppearingViewTypeKey] intValue]
-                                             duration:[animationInfo[AppearingViewDurationKey] floatValue]
-                                              options:[animationInfo[AppearingViewOptionsKey] intValue]
-                          ];
+                      willDisappearFromFrame:[animationInfo[AppearingViewFrameKey] CGRectValue]
+                               animationType:[animationInfo[AppearingViewTypeKey] intValue]
+                                    duration:[animationInfo[AppearingViewDurationKey] floatValue]
+                                     options:[animationInfo[AppearingViewOptionsKey] intValue]
+                 ];
             }
             [self.notificationCenter postNotificationName:AppearingViewWillDisappear object:self userInfo:animationInfo];
             break;

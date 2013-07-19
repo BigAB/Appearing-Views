@@ -38,7 +38,9 @@ typedef enum {
     
     animationBlock = self.animationsMap[@(type)][@(phase)];
     if (!animationBlock) {
-        animationBlock = ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionCallback completed){};
+        animationBlock = ^(UIView *view, CGRect frame, NSTimeInterval duration, CompletionCallback completed){
+            completed();
+        };
     }
     
     return [animationBlock copy];
