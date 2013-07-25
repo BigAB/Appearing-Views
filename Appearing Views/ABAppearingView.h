@@ -5,10 +5,10 @@
 //  Created by Adam Barrett on 2013-07-02.
 //  Copyright (c) 2013 Adam Barrett. All rights reserved.
 //
-#define AppearingViewWillAppear @"ABAppearingViewWillAppear"
-#define AppearingViewDidAppear @"ABAppearingDidWillAppear"
-#define AppearingViewWillDisappear @"ABAppearingViewWillDisappear"
-#define AppearingViewDidDisappear @"ABAppearingViewDidDisappear"
+#define ViewWillAppearWithAnimation    @"ABViewWillAppearWithAnimation"
+#define ViewDidAppearWithAnimation     @"ABViewDidAppearWithAnimation"
+#define ViewWillDisappearWithAnimation @"ABViewWillDisappearWithAnimation"
+#define ViewDidDisappearWithAnimation  @"ABViewDidDisappearWithAnimation"
 
 #define AppearingViewViewKey      @"view"
 #define AppearingViewFrameKey     @"frame"
@@ -40,19 +40,20 @@
 @protocol ABAppearingViewDelagate <NSObject>
 @optional
 
-- (void)appearingView:(ABAppearingView *)view
-    willAppearToFrame:(CGRect)frame
-        animationType:(AnimationType)type
-             duration:(NSTimeInterval)duration
-              options:(UIViewAnimationOptions)options;
+- (void)viewWillAppear:(ABAppearingView *)view
+         withAnimation:(AnimationType)type
+               toFrame:(CGRect)frame
+              duration:(NSTimeInterval)duration
+               options:(UIViewAnimationOptions)options;
 
-- (void)appearingViewDidAppear:(ABAppearingView *)view;
+- (void)viewDidAppear:(ABAppearingView *)view withAnimation:(AnimationType)type;
 
-- (void)appearingView:(ABAppearingView *)view
-willDisappearFromFrame:(CGRect)frame
-        animationType:(AnimationType)type
-             duration:(NSTimeInterval)duration
-              options:(UIViewAnimationOptions)options;
+- (void)viewWillDisappear:(ABAppearingView *)view
+            withAnimation:(AnimationType)type
+                fromFrame:(CGRect)frame
+                 duration:(NSTimeInterval)duration
+                  options:(UIViewAnimationOptions)options;
 
-- (void)appearingViewDidDisappear:(ABAppearingView *)view;
+- (void)viewDidDisappear:(ABAppearingView *)view withAnimation:(AnimationType)type;
+
 @end

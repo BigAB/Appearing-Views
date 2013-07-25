@@ -98,11 +98,11 @@
     [super viewDidUnload];
 }
 
-- (void)appearingView:(ABAppearingView *)view
-    willAppearToFrame:(CGRect)frame
-        animationType:(AnimationType)type
-             duration:(NSTimeInterval)duration
-              options:(UIViewAnimationOptions)options
+- (void)viewWillAppear:(ABAppearingView *)view
+         withAnimation:(AnimationType)type
+               toFrame:(CGRect)frame
+              duration:(NSTimeInterval)duration
+               options:(UIViewAnimationOptions)options
 {
     if (view == self.happySun) {
         __block ABViewController *_self = self;
@@ -115,7 +115,7 @@
     }
 }
 
-- (void)appearingViewDidAppear:(ABAppearingView *)view
+- (void)viewDidAppear:(ABAppearingView *)view withAnimation:(AnimationType)type
 {
     if (view == self.mainTitle) {
         [self.topBanner appear];
@@ -134,11 +134,11 @@
     
 }
 
-- (void)appearingView:(ABAppearingView *)view
-willDisappearFromFrame:(CGRect)frame
-        animationType:(AnimationType)type
-             duration:(NSTimeInterval)duration
-              options:(UIViewAnimationOptions)options
+- (void)viewWillDisappear:(ABAppearingView *)view
+            withAnimation:(AnimationType)type
+                fromFrame:(CGRect)frame
+                 duration:(NSTimeInterval)duration
+                  options:(UIViewAnimationOptions)options
 {
     if (view == self.happySun) {
         __block ABViewController *_self = self;
@@ -150,7 +150,7 @@ willDisappearFromFrame:(CGRect)frame
     }
 }
 
-- (void)appearingViewDidDisappear:(ABAppearingView *)view
+- (void)viewDidDisappear:(ABAppearingView *)view withAnimation:(AnimationType)type
 {
     if (view == self.happySun) {
         __block ABViewController *_self = self;

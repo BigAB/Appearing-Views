@@ -195,7 +195,7 @@ describe(@"Appearing", ^{
             //expected
             [[appearingView should] receive:@selector(appearanceBlock) andReturn:theValue(mockAppearanceBlock)];
             [[appearingView should] receive:@selector(notifyListenersDid:) withArguments:theValue(AnimationPhaseIn)];
-            [[appearingView should] receive:@selector(appearingViewDidAppear)];
+            [[appearingView should] receive:@selector(viewDidAppearWithAnimation:)];
             
             // actual
             [appearingView appearWithAnimation];
@@ -296,7 +296,7 @@ describe(@"Disappearing", ^{
             //expected
             [[appearingView should] receive:@selector(disappearanceBlock) andReturn:theValue(mockDisappearanceBlock)];
             [[appearingView should] receive:@selector(notifyListenersDid:) withArguments:theValue(AnimationPhaseOut)];
-            [[appearingView should] receive:@selector(appearingViewDidDisappear)];
+            [[appearingView should] receive:@selector(viewDidDisappearWithAnimation:)];
             
             // actual
              [appearingView disappearWithAnimation];
