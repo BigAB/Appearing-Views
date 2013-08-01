@@ -192,16 +192,10 @@ static id<AnimationMachine> _animations;
     if (phase == AnimationPhaseIn) {
         [self notifyListenersWill:AnimationPhaseIn];
         [self viewWillAppearWithAnimation:self.animationType];
-        if (self.viewWillAppearWithAnimationCallback) {
-            self.viewWillAppearWithAnimationCallback(self);
-        }
     }
     if (phase == AnimationPhaseOut) {
         [self notifyListenersWill:AnimationPhaseOut];
         [self viewWillDisappearWithAnimation:self.animationType];
-        if (self.viewWillDisappearWithAnimationCallback) {
-            self.viewWillDisappearWithAnimationCallback(self);
-        }
     }
 }
 
@@ -210,35 +204,37 @@ static id<AnimationMachine> _animations;
     if (phase == AnimationPhaseIn) {
         [self notifyListenersDid:AnimationPhaseIn];
         [self viewDidAppearWithAnimation:self.animationType];
-        if (self.viewDidAppearWithAnimationCallback) {
-            self.viewDidAppearWithAnimationCallback(self);
-        }
     }
     if (phase == AnimationPhaseOut) {
         [self notifyListenersDid:AnimationPhaseOut];
         [self viewDidDisappearWithAnimation:self.animationType];
-        if (self.viewDidDisappearWithAnimationCallback) {
-            self.viewDidDisappearWithAnimationCallback(self);
-        }
     }
 }
 
 - (void)notifyListenersDid:(AnimationPhase)phase
 {
-    NSDictionary *userInfo = [self animationInfo];
+    NSDictionary *animationInfo = [self animationInfo];
     switch (phase) {
         case AnimationPhaseIn:
             if (self.delegate && [self.delegate respondsToSelector:@selector(viewDidAppear:withAnimation:)]) {
                 [self.delegate viewDidAppear:self withAnimation:self.animationType];
             }
-            [self.notificationCenter postNotificationName:ViewDidAppearWithAnimation object:self userInfo:userInfo];
+            [self.notificationCenter postNotificationName:ViewDidAppearWithAnimation object:self userInfo:animationInfo];
+            
+            if (self.viewDidAppearWithAnimationCallback) {
+                self.viewDidAppearWithAnimationCallback(self, animationInfo);
+            }
             break;
             
         case AnimationPhaseOut:
             if (self.delegate && [self.delegate respondsToSelector:@selector(viewDidDisappear:withAnimation:)]) {
                 [self.delegate viewDidDisappear:self withAnimation:self.animationType];
             }
-            [self.notificationCenter postNotificationName:ViewDidDisappearWithAnimation object:self userInfo:userInfo];
+            [self.notificationCenter postNotificationName:ViewDidDisappearWithAnimation object:self userInfo:animationInfo];
+            
+            if (self.viewDidDisappearWithAnimationCallback) {
+                self.viewDidDisappearWithAnimationCallback(self, animationInfo);
+            }
             break;
             
         case AnimationPhasePrep:
@@ -263,6 +259,11 @@ static id<AnimationMachine> _animations;
                  ];
             }
             [self.notificationCenter postNotificationName:ViewWillAppearWithAnimation object:self userInfo:animationInfo];
+            
+            if (self.viewWillAppearWithAnimationCallback) {
+                self.viewWillAppearWithAnimationCallback(self, animationInfo);
+            }
+            
             break;
             
         case AnimationPhaseOut:
@@ -275,6 +276,10 @@ static id<AnimationMachine> _animations;
                  ];
             }
             [self.notificationCenter postNotificationName:ViewWillDisappearWithAnimation object:self userInfo:animationInfo];
+            
+            if (self.viewWillDisappearWithAnimationCallback) {
+                self.viewWillDisappearWithAnimationCallback(self, animationInfo);
+            }
             break;
             
         case AnimationPhasePrep:
@@ -291,7 +296,7 @@ static id<AnimationMachine> _animations;
              AppearingViewTypeKey     : @(self.animationType),
              AppearingViewDurationKey : @(self.animationDuration),
              AppearingViewOptionsKey  : @(self.animationOptions),
-            };
+             };
 }
 
 @end

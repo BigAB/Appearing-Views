@@ -37,10 +37,10 @@
         _happySun.delegate = self;
         
         __weak typeof(self) _self = self;
-        _happySun.viewWillAppearWithAnimationCallback = ^(UIView *view) {
+        _happySun.viewWillAppearWithAnimationCallback = ^(UIView *view, NSDictionary *animationInfo) {
             [_self.moon disappear];
         };
-        _happySun.viewDidDisappearWithAnimationCallback = ^(UIView *view) {
+        _happySun.viewDidDisappearWithAnimationCallback = ^(UIView *view, NSDictionary *animationInfo) {
             [_self.moon appear];
         };
         

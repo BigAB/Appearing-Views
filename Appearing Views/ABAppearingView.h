@@ -22,7 +22,7 @@
 @class ABAppearingView;
 @protocol ABAppearingViewDelagate;
 
-typedef void (^ViewAppearanceCallback)(UIView *view);
+typedef void (^ViewAppearanceCallback)(UIView *view, NSDictionary *animationInfo);
 
 @interface ABAppearingView : UIView
 
