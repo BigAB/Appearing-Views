@@ -19,7 +19,10 @@
 #import <UIKit/UIKit.h>
 #import "ABAnimations.h"
 
+@class ABAppearingView;
 @protocol ABAppearingViewDelagate;
+
+typedef void (^ViewAppearanceCallback)(UIView *view);
 
 @interface ABAppearingView : UIView
 
@@ -29,6 +32,11 @@
 @property (nonatomic, assign) AnimationType animationType;
 @property (nonatomic, assign) NSTimeInterval animationDuration;
 @property (nonatomic, assign) UIViewAnimationOptions animationOptions;
+
+@property (nonatomic, copy) ViewAppearanceCallback viewWillAppearWithAnimationCallback;
+@property (nonatomic, copy) ViewAppearanceCallback viewDidAppearWithAnimationCallback;
+@property (nonatomic, copy) ViewAppearanceCallback viewWillDisappearWithAnimationCallback;
+@property (nonatomic, copy) ViewAppearanceCallback viewDidDisappearWithAnimationCallback;
 
 + (void)setAnimationsObject:(id<AnimationMachine>)animationsObject;
 

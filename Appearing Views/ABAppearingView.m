@@ -108,8 +108,7 @@ static id<AnimationMachine> _animations;
 {
     if (!self.hidden) return;
     [self prepareForAnimatedAppearance];
-    [self notifyListenersWill:AnimationPhaseIn];
-    [self viewWillAppearWithAnimation:self.animationType];
+    [self willCallbacksAndNotifications:AnimationPhaseIn];
     
     self.hidden = NO;
     [self appearWithAnimation];
@@ -119,8 +118,7 @@ static id<AnimationMachine> _animations;
 {
     if (self.hidden) return;
     self.fullFrame = self.frame;
-    [self notifyListenersWill:AnimationPhaseOut];
-    [self viewWillDisappearWithAnimation:self.animationType];
+    [self willCallbacksAndNotifications:AnimationPhaseOut];
     [self disappearWithAnimation];
 }
 
@@ -146,8 +144,7 @@ static id<AnimationMachine> _animations;
 {
     __weak typeof(self) _self = self;
     return [^(){
-        [_self notifyListenersDid:AnimationPhaseIn];
-        [_self viewDidAppearWithAnimation:_self.animationType];
+        [_self didCallbacksAndNotifications:AnimationPhaseIn];
     } copy];
 }
 
@@ -157,8 +154,7 @@ static id<AnimationMachine> _animations;
     return [^(){
         _self.hidden = YES;
         [_self resetView];
-        [_self notifyListenersDid:AnimationPhaseOut];
-        [_self viewDidDisappearWithAnimation:_self.animationType];
+        [_self didCallbacksAndNotifications:AnimationPhaseOut];
     } copy];
 }
 
@@ -190,7 +186,43 @@ static id<AnimationMachine> _animations;
     // for subclassing
 }
 
-#pragma mark - ABAppearingViewDelagate stuff
+#pragma mark - ABAppearingViewDelagate / Callbacks stuff
+- (void)willCallbacksAndNotifications:(AnimationPhase)phase
+{
+    if (phase == AnimationPhaseIn) {
+        [self notifyListenersWill:AnimationPhaseIn];
+        [self viewWillAppearWithAnimation:self.animationType];
+        if (self.viewWillAppearWithAnimationCallback) {
+            self.viewWillAppearWithAnimationCallback(self);
+        }
+    }
+    if (phase == AnimationPhaseOut) {
+        [self notifyListenersWill:AnimationPhaseOut];
+        [self viewWillDisappearWithAnimation:self.animationType];
+        if (self.viewWillDisappearWithAnimationCallback) {
+            self.viewWillDisappearWithAnimationCallback(self);
+        }
+    }
+}
+
+- (void)didCallbacksAndNotifications:(AnimationPhase)phase
+{
+    if (phase == AnimationPhaseIn) {
+        [self notifyListenersDid:AnimationPhaseIn];
+        [self viewDidAppearWithAnimation:self.animationType];
+        if (self.viewDidAppearWithAnimationCallback) {
+            self.viewDidAppearWithAnimationCallback(self);
+        }
+    }
+    if (phase == AnimationPhaseOut) {
+        [self notifyListenersDid:AnimationPhaseOut];
+        [self viewDidDisappearWithAnimation:self.animationType];
+        if (self.viewDidDisappearWithAnimationCallback) {
+            self.viewDidDisappearWithAnimationCallback(self);
+        }
+    }
+}
+
 - (void)notifyListenersDid:(AnimationPhase)phase
 {
     NSDictionary *userInfo = [self animationInfo];

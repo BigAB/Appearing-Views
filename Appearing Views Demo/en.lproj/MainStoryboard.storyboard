@@ -91,6 +91,17 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
+                            <view opaque="NO" contentMode="scaleToFill" id="CWi-Tm-YK9" customClass="ABAppearingView">
+                                <rect key="frame" x="20" y="158" width="159" height="150"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" image="moon.png" id="HJ1-i6-P5t">
+                                        <rect key="frame" x="0.0" y="0.0" width="159" height="150"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -104,8 +115,23 @@
         <image name="appearing-views.png" width="200" height="116"/>
         <image name="grass.png" width="640" height="105"/>
         <image name="happysun.png" width="300" height="255"/>
+        <image name="moon.png" width="370" height="364"/>
         <image name="repeating-pattern.png" width="1152" height="873"/>
     </resources>
+    <classes>
+        <class className="ABAppearingView" superclassName="UIView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ABAppearingView.h"/>
+        </class>
+        <class className="ABViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ABViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="dismissTopBanner:"/>
+                <relationship kind="outlet" name="mainTitle" candidateClass="ABAppearingView"/>
+                <relationship kind="outlet" name="pressMe" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="topBanner" candidateClass="ABAppearingView"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

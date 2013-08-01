@@ -18,6 +18,7 @@
 
 @property (nonatomic, strong) ABAppearingView *happySun;
 @property (nonatomic, strong) ABAppearingView *grass;
+@property (nonatomic, strong) ABAppearingView *moon;
 
 @end
 
@@ -34,6 +35,15 @@
         _happySun.animationType = AnimationTypeSlideRight;
         _happySun.animationOptions = UIViewAnimationOptionBeginFromCurrentState;
         _happySun.delegate = self;
+        
+        __weak typeof(self) _self = self;
+        _happySun.viewWillAppearWithAnimationCallback = ^(UIView *view) {
+            [_self.moon disappear];
+        };
+        _happySun.viewDidDisappearWithAnimationCallback = ^(UIView *view) {
+            [_self.moon appear];
+        };
+        
         [self.view addSubview:_happySun];
     }
     return _happySun;
@@ -52,6 +62,21 @@
         [self.view addSubview:_grass];
     }
     return _grass;
+}
+
+- (ABAppearingView *)moon
+{
+    if (!_moon) {
+        UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+        UIViewController *vc = [storyBoard instantiateViewControllerWithIdentifier:@"Happy"];
+        _moon = vc.view.subviews[2];
+        _moon.animationDuration = 4.5;
+        _moon.animationType = AnimationTypeFade;
+        //_moon.animationOptions = UIViewAnimationOptionAllowUserInteraction;
+        _moon.delegate = self;
+        [self.view addSubview:_moon];
+    }
+    return _moon;
 }
 
 #pragma mark - LifeCycle
